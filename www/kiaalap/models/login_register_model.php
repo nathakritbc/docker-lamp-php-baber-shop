@@ -85,10 +85,12 @@ function login($conn,$username,$password){
            $result = mysqli_query($conn, $sql);  
            if(mysqli_num_rows($result) > 0)  
            {  
+                @session_start();
                 $rowUser =  mysqli_fetch_assoc($result);
                 $_SESSION['username'] = $username; 
                 $_SESSION['is_login'] = true; 
-                $_SESSION['user_id'] = $rowUser["id"];  
+                $_SESSION['user_id'] = $rowUser["id"];
+                $_SESSION['full_name'] = $rowUser["full_name"];   
                 $_SESSION['user_role'] = $rowUser["user_role"];  
                 $_SESSION['email'] = $rowUser["email"];  
                 $_SESSION['profile'] = $rowUser["profile"];  
@@ -141,7 +143,7 @@ function forgotPassword($conn,$username,$password){
         //     }
 
         // echo "username true";
-        echo "<script>location ='../login_register.php#nk-login-switch';</script>";
+          echo "<script>location ='../login_register.php#nk-login-switch';</script>";
 
          } else  
         {  
