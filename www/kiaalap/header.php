@@ -18,11 +18,26 @@
                                        <ul class="nav navbar-nav mai-top-nav">
                                            <li class="nav-item"><a href="./info_shop.php" class="nav-link">หน้าหลัก</a>
                                            </li>
-                                           <li class="nav-item"><a href="#" class="nav-link">ตั้งค่าบัญชี</a>
-                                           </li>
+                                           <?php 
+                            if($_SESSION["user_role"] ==="USER"){?>
                                            <li class="nav-item"><a href="./jongq_list_user.php"
                                                    class="nav-link">รายการจอง</a>
                                            </li>
+                                           <li class="nav-item"><a href="./update_user_profile.php"
+                                                   class="nav-link">เเก้ไขข้อมูลผู้ใช้งาน</a>
+                                           </li>
+                                           <li class="nav-item"><a href="./update_user_password.php"
+                                                   class="nav-link">เเก้ไขรหัสผ่าน</a>
+                                           </li>
+                                           <?php }else{?>
+                                           <li class="nav-item"><a href="./jongq_list_admin.php"
+                                                   class="nav-link">รายการจอง</a>
+                                           </li>
+                                           <li class="nav-item"><a href="./update_shop_information.php"
+                                                   class="nav-link">จัดการข้อมูลร้านตัดผม</a>
+                                           </li>
+                                           <?php   } ?>
+
                                            <li class="nav-item"><a href="./logout.php" class="nav-link">ออกจากระบบ</a>
                                            </li>
                                        </ul>

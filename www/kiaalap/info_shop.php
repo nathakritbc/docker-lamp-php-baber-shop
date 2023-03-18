@@ -1,9 +1,14 @@
 <?php 
 @session_start();
-if(!isset($_SESSION["user_id"])){
+if(!isset($_SESSION["user_id"])  ){
     header('Location: ./login.php');
     exit;
 }
+// if( $_SESSION["user_role"] !=="USER"){
+//     header('Location: ./login.php');
+//     exit;
+// }
+
 $user_id=$_SESSION["user_id"];
 
 $dateNow =  date("Y/m/d") ;
@@ -23,7 +28,7 @@ $mountThai = dateMonthThaiFormat(date("M"));
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Course Info | Kiaalap - Kiaalap Admin Template</title>
+    <title>ข้อมูลร้านตัดผม</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- favicon
@@ -139,7 +144,7 @@ $mountThai = dateMonthThaiFormat(date("M"));
                             <div class="row">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="comment-head">
-                                        <h3><b>รีวิว</b></h3>
+                                        <h3><b>รีวิว </b></h3>
                                     </div>
                                 </div>
                             </div>
@@ -191,6 +196,10 @@ $mountThai = dateMonthThaiFormat(date("M"));
 
                             </div>
 
+                            <?php 
+                            if($_SESSION["user_role"] ==="USER"){?>
+
+
 
                             <div class="row">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -217,6 +226,11 @@ $mountThai = dateMonthThaiFormat(date("M"));
                                 </div>
                             </div>
                         </div>
+
+                        <?php                            
+}
+                            ?>
+
                     </div>
                 </div>
             </div>

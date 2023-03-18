@@ -1,5 +1,13 @@
 <?php 
 @session_start();
+if(!isset($_SESSION["user_id"])  ){
+    header('Location: ./login.php');
+    exit;
+}
+if( $_SESSION["user_role"] !=="USER"){
+    header('Location: ./login.php');
+    exit;
+}
 
 // $dd=date("Y-m-d");
 $dd=null;
@@ -30,7 +38,7 @@ $resultJongQLists = mysqli_query($conn, $sqlJongQLists);
 <head>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Data Table | Kiaalap - Kiaalap Admin Template</title>
+    <title>รายการจองคิวตัดผม</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- favicon
@@ -126,7 +134,7 @@ $resultJongQLists = mysqli_query($conn, $sqlJongQLists);
                         <div class="sparkline13-list">
                             <div class="sparkline13-hd">
                                 <div class="main-sparkline13-hd">
-                                    <h1>Projects <span class="table-project-n">Data</span> Table</h1>
+                                    <h1>รายการจองคิวร้านตัดผม</h1>
                                 </div>
                             </div>
                             <div class="row">

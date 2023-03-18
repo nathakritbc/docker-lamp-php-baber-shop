@@ -21,7 +21,7 @@ switch ($acction) {
 
     case 'login':
         login($conn,$username,$password);
-        break;
+        break; 
 
     case 'forgotPassword':
         forgotPassword($conn,$username,$password);
@@ -87,7 +87,7 @@ function login($conn,$username,$password){
            {  
                 @session_start();
                 $rowUser =  mysqli_fetch_assoc($result);
-                $_SESSION['username'] = $username; 
+                $_SESSION['username'] = $username;  
                 $_SESSION['is_login'] = true; 
                 $_SESSION['user_id'] = $rowUser["id"];
                 $_SESSION['full_name'] = $rowUser["full_name"];   

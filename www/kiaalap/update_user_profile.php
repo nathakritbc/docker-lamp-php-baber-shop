@@ -10,9 +10,11 @@ if( $_SESSION["user_role"] !=="USER"){
 }
 $dateNow=date("Y-m-d");
 include_once("./configs/connect_db.php");
-
-$sqlTimeSlot = "SELECT * FROM tb_time_slots WHERE time_slot_status='1';";
-$resultTimeSlot = mysqli_query($conn, $sqlTimeSlot);
+ $user_id=$_SESSION["user_id"];
+ $sqlUser ="SELECT `id`, `full_name`, `tel`, `username`, `email`, `password`, `profile`, `user_role` FROM `tb_users` 
+           WHERE id='$user_id';";
+ $queryUser=   mysqli_query($conn, $sqlUser);
+  $userResult  = mysqli_fetch_assoc($queryUser)
 
 
 ?>
@@ -22,13 +24,14 @@ $resultTimeSlot = mysqli_query($conn, $sqlTimeSlot);
 
 <head>
 
-    <title>Basic Form Element | Kiaalap - Kiaalap Admin Template</title>
+    <title>เเก้ไขข้อมูลผู้ใช้งาน</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
 
     <?php include_once("./head_fragment.php") ?>
     <!-- style CSS
 		============================================ -->
     <link rel="stylesheet" href="css/alerts.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
 </head>
 
@@ -63,7 +66,7 @@ $resultTimeSlot = mysqli_query($conn, $sqlTimeSlot);
                         <div class="sparkline12-list">
                             <div class="sparkline12-hd">
                                 <div class="main-sparkline12-hd">
-                                    <h1>จองคิวตัดผม</h1>
+                                    <h1>เเก้ไขข้อมูลผู้ใช้งาน </h1>
                                 </div>
                             </div>
                             <div class="sparkline12-graph">
@@ -71,38 +74,18 @@ $resultTimeSlot = mysqli_query($conn, $sqlTimeSlot);
                                     <div class="row">
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                             <div class="all-form-element-inner">
-                                                <form action="./jongq_user.php" method="post"
-                                                    enctype="multipart/form-data">
+                                                <form action="" method="post" enctype="multipart/form-data">
+
                                                     <div class="form-group-inner">
                                                         <div class="row">
                                                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                                                                 <label
-                                                                    class="login2 pull-right pull-right-pro">วันที่</label>
+                                                                    class="login2 pull-right pull-right-pro">ชื่อ</label>
                                                             </div>
                                                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <input readonly type="date" id="jongq_date"
-                                                                    onchange="checkJongQDate()" value="<?=$dateNow;?>"
-                                                                    class="form-control" />
-                                                                <input type="hidden" name="jong_date"
-                                                                    value="<?=$dateNow;?>" class="form-control" />
-                                                                <input type="hidden" name="user_id"
-                                                                    value="<?=$_SESSION["user_id"];?>"
-                                                                    class="form-control" />
-                                                                <span id="validateJongQ" style="display: none;"
-                                                                    class="help-block small">เลือกวันที่ไม่ถูกต้อง</span>
-                                                                <div id="validateAlert" style="display: none;"
-                                                                    class="alert alert-danger alert-mg-b alert-st-four"
-                                                                    role="alert">
-                                                                    <i class="fa fa-times edu-danger-error admin-check-pro admin-check-pro-none"
-                                                                        aria-hidden="true"></i>
-                                                                    <p class="message-mg-rt message-alert-none">
-                                                                        <strong>Oh snap!</strong> Change a few things up
-                                                                        and try submitting again.
-                                                                    </p>
-                                                                </div>
-
-
-
+                                                                <input type="text" name="full_name"
+                                                                    value="<?=$userResult['full_name']?>"
+                                                                    class="form-control" required />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -111,73 +94,78 @@ $resultTimeSlot = mysqli_query($conn, $sqlTimeSlot);
                                                         <div class="row">
                                                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                                                                 <label
-                                                                    class="login2 pull-right pull-right-pro">เลือกเวลาที่ยังว่าง</label>
+                                                                    class="login2 pull-right pull-right-pro">เบอร์โทรศัพท์</label>
                                                             </div>
                                                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <?php 
-                                                                if(mysqli_num_rows($resultTimeSlot)<=0){?>
-                                                                <label id="fullQidNoti"
-                                                                    class="login2 pull-left pull-right-pro "><span
-                                                                        class="text-danger">คิวเต็ม</span></label>
-                                                                <!-- <span class="text-danger">คิวเต็ม</span> -->
-                                                                <?php 
-                                                                }else{?>
-                                                                <div class="form-select-list" id="selectInputId"
-                                                                    style="display: block;"
-                                                                    onload="selectInputIdFunc('<?=mysqli_num_rows($resultTimeSlot)?>')">
-                                                                    <select class="form-control custom-select-value"
-                                                                        name="time_slot_id" required>
-                                                                        <?php 
-                                                                    //    if (mysqli_num_rows($resultTimeSlot) > 0) { 
-                                                                            while($rowTimeSlot = mysqli_fetch_assoc($resultTimeSlot)) {
-                                                                                // if($rowTimeSlot["time_slot_status"]==1){
-                                                                                    ?>
-                                                                        <option value="<?=$rowTimeSlot["id"]?>">
-                                                                            <?=$rowTimeSlot["time_slot_description"]?>
-                                                                        </option>
-                                                                        <?php 
-                                                                                // }
-                                                                            // }
-                                                                        }
-                                                                       ?>
-
-                                                                    </select>
-                                                                </div>
-                                                                <?php 
-                                                                }
-                                                                ?>
-
+                                                                <input type="text" name="tel"
+                                                                    value="<?=$userResult['tel']?>" class="form-control"
+                                                                    required />
                                                             </div>
                                                         </div>
                                                     </div>
-
 
                                                     <div class="form-group-inner">
                                                         <div class="row">
                                                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
                                                                 <label
-                                                                    class="login2 pull-right pull-right-pro">สลิปการโอนจอง
-                                                                </label>
+                                                                    class="login2 pull-right pull-right-pro">ชื่อผู้ใช้งาน
+                                                                    username</label>
                                                             </div>
                                                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <input required type="file" class="form-control"
-                                                                    accept="image/*" name="jong_slip"
-                                                                    onchange="loadFile(event)" />
+                                                                <input type="text" name="username"
+                                                                    value="<?=$userResult['username']?>"
+                                                                    class="form-control" required />
                                                             </div>
+                                                        </div>
+                                                    </div>
 
+                                                    <div class="form-group-inner">
+                                                        <div class="row">
+                                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                                                <label
+                                                                    class="login2 pull-right pull-right-pro">อีเมล</label>
+                                                            </div>
+                                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                                                <input type="text" name="email"
+                                                                    value="<?=$userResult['email']?>"
+                                                                    class="form-control" required />
+                                                            </div>
                                                         </div>
                                                     </div>
 
                                                     <!-- <div class="form-group-inner">
                                                         <div class="row">
-                                                            <div class="col-12">
-                                                                <img class="rounded mx-auto d-block" id="output" />
+                                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                                                <label
+                                                                    class="login2 pull-right pull-right-pro">รหัสผ่าน</label>
                                                             </div>
-
+                                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                                                <input type="password" name="password" value=""
+                                                                    class="form-control" required />
+                                                            </div>
                                                         </div>
                                                     </div> -->
 
-                                                    <?php  if(mysqli_num_rows($resultTimeSlot)>0){?>
+
+
+                                                    <div class="form-group-inner">
+                                                        <div class="row">
+                                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                                                <label
+                                                                    class="login2 pull-right pull-right-pro">รูปโปรไฟล์
+                                                                </label>
+                                                            </div>
+                                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                                                <input type="file" class="form-control" accept="image/*"
+                                                                    name="profile" onchange="loadFile(event)" />
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+
+
+                                                    <input type="hidden" value="update_user_prfile"
+                                                        name="update_user_prfile">
                                                     <div class="form-group-inner">
                                                         <div class="login-btn-inner">
                                                             <div class="row">
@@ -189,18 +177,16 @@ $resultTimeSlot = mysqli_query($conn, $sqlTimeSlot);
                                                                             type="submit">Cancel
                                                                         </button> -->
                                                                         <button id="btnSubmit"
-                                                                            class="btn btn-sm btn-primary login-submit-cs"
-                                                                            type="submit">บันทึกการจองคิวตัดผม
+                                                                            class="btn btn-sm btn-warning login-submit"
+                                                                            type="submit">เเก้ไขข้อมูลผู้ใช้งาน
                                                                         </button>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <input type="hidden" value="create" name="acction">
-                                                    <?php                                                  
- }
-                                                    ?>
+
+
                                                 </form>
 
                                             </div>
@@ -309,8 +295,70 @@ $resultTimeSlot = mysqli_query($conn, $sqlTimeSlot);
 
 <?php 
 include_once("./configs/connect_db.php");
+ 
+if(isset($_POST["update_user_prfile"])){
+    // $profile="555555555555";
+    $valueProfile= $_FILES["profile"]["name"];
 
-include_once("./models/jongq_create_model.php");
+     $profile ="";
+   
+    if($valueProfile == null){
+       $profile = $userResult['profile'];
+    } else{
+       $dt_image1_time =  date("Y-m-d h:i:s");
+       $profile = uniqid() . $dt_image1_time . $_FILES["profile"]["name"]; 
+    }
+
+        //     $path = "./uploads/";
+        // move_uploaded_file($_FILES["profile"]["tmp_name"], "$path/$profile");
+
+    $sqlUpdate = "UPDATE `tb_users` SET  `full_name`='{$_POST["full_name"]}' ,`tel`='{$_POST["tel"]}' ,
+                  `username`='{$_POST["username"]}' , `email`='{$_POST["email"]}'  ,`profile`='$profile' 
+                   WHERE id='$user_id';";
+
+    if (mysqli_query($conn, $sqlUpdate)) {
+
+                   if($valueProfile !== null){
+                        $path = "./img/user/";
+                         move_uploaded_file($_FILES["profile"]["tmp_name"], "$path/$profile");
+
+                        // $file_slip= "./img/user/{$userResult['profile']}";
+                        // $status=unlink($file_slip);  
+
+                         @session_start(); 
+                          $_SESSION['username'] = $_POST["username"];  
+                          $_SESSION['full_name'] = $_POST["full_name"]    ;
+                        $_SESSION['email'] = $_POST["email"];  
+                        $_SESSION['profile'] =$profile;  
+                        $_SESSION['tel'] =  $_POST["tel"];  
+
+                    }
+
+                    echo "<script> 
+                        Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: 'เเก้ไขข้อมูลผู้ใช้สำเร็จ',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(()=> location = './update_user_profile.php')
+
+                    </script>";
+                
+           }  
+           else  
+           {  
+                echo
+                    "<script> 
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'เเก้ไขข้อมูลผู้ใช้สำเร็จไม่สำเร็จ', 
+                            text: 'โปรดตรวจสอบความถูกต้องของข้อมูล!',
+                        }).then(()=> location = './update_user_profile.php')
+                  </script>";
+           } 
+ 
+}
 
 ?>
 

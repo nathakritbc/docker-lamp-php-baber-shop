@@ -1,5 +1,13 @@
 <?php 
 @session_start();
+if(!isset($_SESSION["user_id"])  ){
+    header('Location: ./login.php');
+    exit;
+}
+if( $_SESSION["user_role"] !=="USER"){
+    header('Location: ./login.php');
+    exit;
+}
 $dateNow=date("Y-m-d");
 include_once("./configs/connect_db.php");
 
