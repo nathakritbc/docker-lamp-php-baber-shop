@@ -15,7 +15,8 @@
                      <li>
                          <a title="Landing Page" href="./jongq_user.php" aria-expanded="false"><span
                                  class="educate-icon educate-event icon-wrap sub-icon-mg" aria-hidden="true"></span>
-                             <span class="mini-click-non">การจอง</span></a>
+                             <span class="mini-click-non">การจอง</span>
+                         </a>
                      </li>
                      <!-- <li>
                             <a title="Landing Page" href="events.html" aria-expanded="false"><span
@@ -23,7 +24,18 @@
                                 <span class="mini-click-non">ข่าว</span></a>
                         </li> -->
 
-                     <?php }?>
+                     <?php }
+                     else{
+                        ?>
+                     <li>
+                         <a title="Landing Page" href="./jongq_list_admin.php" aria-expanded="false"><span
+                                 class="educate-icon educate-event icon-wrap sub-icon-mg" aria-hidden="true"></span>
+                             <span class="mini-click-non">รายการจองคิวตัดผม</span>
+                         </a>
+                     </li>
+                     <?php     }
+                     
+                     ?>
 
                  </ul>
              </nav>

@@ -24,7 +24,7 @@ include_once("./configs/connect_db.php");
 
 <head>
 
-    <title>Basic Form Element | Kiaalap - Kiaalap Admin Template</title>
+    <title>เเก้ไขข้อมูลร้านตัดผม</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
 
     <?php include_once("./head_fragment.php") ?>

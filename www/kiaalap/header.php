@@ -30,14 +30,17 @@
                                                    class="nav-link">เเก้ไขรหัสผ่าน</a>
                                            </li>
                                            <?php }else{?>
-                                           <li class="nav-item"><a href="./jongq_list_admin.php"
+                                           <!-- <li class="nav-item"><a href="./jongq_list_admin.php"
                                                    class="nav-link">รายการจอง</a>
-                                           </li>
-                                           <li class="nav-item"><a href="./update_shop_information.php"
+                                           </li> -->
+                                           <li class="nav-item"><a href="./admin_time_slot.php"
                                                    class="nav-link">ช่วงเวลาการจอง</a>
                                            </li>
                                            <li class="nav-item"><a href="./update_shop_information.php"
                                                    class="nav-link">ข้อมูลร้านตัดผม</a>
+                                           </li>
+                                           <li class="nav-item"><a href="./admin_time_slot.php"
+                                                   class="nav-link">จัดการบัญชีธนาคาร</a>
                                            </li>
                                            <?php   } ?>
 

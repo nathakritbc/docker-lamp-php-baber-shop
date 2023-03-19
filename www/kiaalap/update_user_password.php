@@ -33,6 +33,9 @@ include_once("./configs/connect_db.php");
     <link rel="stylesheet" href="css/alerts.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+    <!-- modals CSS
+		============================================ -->
+    <link rel="stylesheet" href="css/modals.css">
 </head>
 
 <body>
