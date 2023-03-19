@@ -255,10 +255,12 @@ $resultJongQLists = mysqli_query($conn, $sqlJongQLists);
                                                     <?php    
                                                 if($rowJongQ["jong_status"]=="PENDING"){?>
 
-                                                    <button type="button"
+                                                    <a type="button"
+                                                        href="./jongq_list_admin.php?confirmR=req&jong_id=<?php echo $rowJongQ["id"]; ?>"
+                                                        type="button"
                                                         class="btn btn-sm btn-success"><strong>ยืนยันการจอง
                                                         </strong>
-                                                    </button>
+                                                    </a>
                                                     <a type="button"
                                                         href="./jongq_list_admin.php?deleteR=req&jong_id=<?php echo $rowJongQ["id"]; ?>&time_slot_id=<?php echo $rowJongQ["time_slot_id"]; ?>&jong_slip=<?php echo $rowJongQ["jong_slip"]; ?>"
                                                         class="btn btn-sm btn-danger text-white">
@@ -267,9 +269,9 @@ $resultJongQLists = mysqli_query($conn, $sqlJongQLists);
 
                                                     <?PHP  
                                                    }elseif($rowJongQ["jong_status"]=="CONFIRM"){?>
-                                                    <button type="button"
+                                                    <!-- <button type="button"
                                                         class="btn btn-sm btn-primary"><strong>ดูการจอง </strong>
-                                                    </button>
+                                                    </button> -->
                                                     <?php
                                                     }else{?>
                                                     <button type="button"
@@ -458,7 +460,58 @@ function findByDate() {
             // }
  
 
-            mysqli_close($conn);
+          
+        }
+                if (isset($_GET["confirmR"] )) {
+                echo
+                    "<script> 
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'ยืนยันการจอง?',
+                            text: 'ท่านเเน่ใจว่า ท่านต้องยืนยันการจองคิวตัดผม!',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'ใช่',
+                            cancelButtonText: 'ไม่!'
+                        })
+                        .then((result) => {
+                            if (result.isConfirmed) {
+                                location = 'jongq_list_admin.php?confirmR2=req&jong_id={$_GET["jong_id"]}'
+                            }else{
+                                location = 'jongq_list_admin.php'
+                            }
+                        }); 
+                </script>";
+        }
+
+         if (isset($_GET["confirmR2"])) { 
+            $jong_id=$_GET["jong_id"];
+            $UpdateStatus = "UPDATE `tb_jongs` SET `jong_status` = 'CONFIRM' WHERE `tb_jongs`.`id` = '$jong_id';"; 
+ 
+
+            if (mysqli_query($conn, $UpdateStatus)) {  
+                echo
+                    "<script> 
+                        Swal.fire(
+                            'ยืนยันการจองสำเร็จ!',
+                            'ท่านได้ยืนยันการจองคิวตัดผมเรียบร้อยเรียบร้อย',
+                            'success'
+                        ).then(()=> location = 'jongq_list_admin.php')
+                    </script>"; 
+            } else {
+                echo
+                    "<script> 
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'ยืนยันการจองไม่สำเร็จ', 
+                    }).then(()=> location = 'jongq_list_admin.php')
+                </script>";
+            }
+            // }
+ 
+
+          
         }
         ?>
 

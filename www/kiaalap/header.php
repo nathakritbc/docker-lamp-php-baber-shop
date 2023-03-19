@@ -34,7 +34,10 @@
                                                    class="nav-link">รายการจอง</a>
                                            </li>
                                            <li class="nav-item"><a href="./update_shop_information.php"
-                                                   class="nav-link">จัดการข้อมูลร้านตัดผม</a>
+                                                   class="nav-link">ช่วงเวลาการจอง</a>
+                                           </li>
+                                           <li class="nav-item"><a href="./update_shop_information.php"
+                                                   class="nav-link">ข้อมูลร้านตัดผม</a>
                                            </li>
                                            <?php   } ?>
 
