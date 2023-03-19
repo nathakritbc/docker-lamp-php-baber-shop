@@ -264,6 +264,9 @@ ALTER TABLE `tb_jongs`
 --
 ALTER TABLE `tb_payments`
   ADD CONSTRAINT `tb_payments_ibfk_1` FOREIGN KEY (`barbershop_information_id`) REFERENCES `tb_barbershop_informations` (`id`);
+
+ALTER TABLE `tb_barbershop_informations` ADD `bi_line_token` TEXT NOT NULL AFTER `bi_icon`;
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
