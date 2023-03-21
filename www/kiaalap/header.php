@@ -39,7 +39,7 @@
                                            <li class="nav-item"><a href="./update_shop_information.php"
                                                    class="nav-link">ข้อมูลร้านตัดผม</a>
                                            </li>
-                                           <li class="nav-item"><a href="./admin_time_slot.php"
+                                           <li class="nav-item"><a href="./admin_bank_account.php"
                                                    class="nav-link">จัดการบัญชีธนาคาร</a>
                                            </li>
                                            <?php   } ?>
