@@ -292,8 +292,8 @@ include_once("./configs/connect_db.php");
 if(isset($_POST["add_data"])){
     
 
-    $sqlUpdate = "INSERT INTO `tb_payments`(  `payment_name`, `payment_number`, `payment_description`, `payment_bank_name`, `barbershop_information_id`) 
-                  VALUES ('{$_POST["payment_name"]}','{$_POST["payment_number"]}','{$_POST["payment_description"]}','{$_POST["payment_bank_name"]}','1' )";
+    $sqlUpdate = "INSERT INTO `tb_payments` (`id`, `payment_name`, `payment_number`, `payment_description`, `payment_image`, `barbershop_information_id`, `payment_bank_name`)
+                   VALUES (NULL, '{$_POST["payment_name"]}', '{$_POST["payment_number"]}', '', '', '1', '{$_POST["payment_bank_name"]}');";
 
     if (mysqli_query($conn, $sqlUpdate)) { 
                    
@@ -304,7 +304,8 @@ if(isset($_POST["add_data"])){
                                 title: 'เพิ่มข้อมูลสำเร็จ',
                                 showConfirmButton: false,
                                 timer: 1500
-                            }).then(()=> location = './admin_bank_account.php')
+                            })
+                            .then(()=> location = './admin_bank_account.php')
 
                     </script>";
                 
@@ -317,19 +318,20 @@ if(isset($_POST["add_data"])){
                             icon: 'error',
                             title: 'เพิ่มข้อมูลไม่สำเร็จ', 
                             text: 'โปรดตรวจสอบความถูกต้องของข้อมูล!',
-                        }).then(()=> location = './admin_bank_account.php')
+                        })
+                        //.then(()=> location = './admin_bank_account.php')
                   </script>";
            } 
  
 }
  
 if(isset($_POST["update_data"])){
-    
+    $payment_id=$_POST["payment_id"];
 
-    $sqlUpdate = "UPDATE ` tb_payments` SET `payment_name` = '{$_POST["payment_name"]}' 
-                 ,`payment_number` = '{$_POST["payment_number"]}' 
-                 ,`payment_bank_name` = '{$_POST["payment_bank_name"]}' 
-                  WHERE `tb_payments`.`id` = '{$_POST["payment_id"]}';";
+    $sqlUpdate = "UPDATE `tb_payments` SET `payment_name` = '{$_POST["payment_name"]}', 
+                  `payment_number` = '{$_POST["payment_number"]}',
+                  `payment_bank_name` = '{$_POST["payment_bank_name"]}' 
+                  WHERE `tb_payments`.`id` = $payment_id;";
 
     if (mysqli_query($conn, $sqlUpdate)) { 
                    
