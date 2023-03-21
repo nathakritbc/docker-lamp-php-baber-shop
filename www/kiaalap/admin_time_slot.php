@@ -71,28 +71,33 @@ $dateNow=date("Y-m-d");
             <div class="container-fluid">
 
 
+                <div id="PrimaryModalalertaa" class="modal modal-edu-general default-popup-PrimaryModal fade"
+                    role="dialog">
+                    <form action="" method="post">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-close-area modal-close-df">
+                                    <a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- <i class="educate-icon educate-checked modal-check-pro"></i> -->
+                                    <h2 class="text-primary" style="margin-bottom:1rem">เพิ่มช่วงเวลา</h2>
+                                    <label for="">เวลา</label>
+                                    <input required type="text" name="time_slot_time" placeholder="10:00:00 น."
+                                        class="form-control" required />
+                                    <label for="">รายละเอียดช่วงเวลา</label>
+                                    <input required type="text" name="time_slot_description"
+                                        placeholder="10:00-10.50 น." class="form-control" required />
 
-                <div id="addTimeSlotModal"
-                    class="modal modal-edu-general default-popup-PrimaryModal PrimaryModal-bgcolor fade" role="dialog">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-close-area modal-close-df">
-                                <a class="close" data-dismiss="modal" href="#"><i class="fa fa-close"></i></a>
-                            </div>
-                            <div class="modal-body">
-                                <i class="educate-icon educate-checked modal-check-pro"></i>
-                                <h2>เพิ่มช่วงเวลา!</h2>
-                                <p>The Modal plugin is a dialog
-                                    box/popup window
-                                    that is displayed on top of the
-                                    current page</p>
-                            </div>
-                            <div class="modal-footer footer-modal-admin">
-                                <a data-dismiss="modal" href="#">Cancel</a>
-                                <a href="#">Process</a>
+                                    <input type="hidden" name="add_user_time_slot" value="add_user_time_slot">
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-primary" type="submit">เพิ่มช่วงเวลา</button>
+                                    <button class="btn btn-danger" data-dismiss="modal">ยกเลิก</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
 
                 <div class="row">
@@ -112,7 +117,7 @@ $dateNow=date("Y-m-d");
                                         </div>
                                     </div>
                                     <div class="col-md-12 bg-light text-right mb-5" style="margin-bottom:1rem">
-                                        <button data-toggle="modal" data-target="#addTimeSlotModal" type="button"
+                                        <button data-toggle="modal" data-target="#PrimaryModalalertaa" type="button"
                                             class="btn btn-primary">เพิ่มช่วงเวลา</button>
                                     </div>
                                 </div>
@@ -138,49 +143,73 @@ $dateNow=date("Y-m-d");
                                                             </div>
                                                             <div class="col-md-2">
                                                                 <!-- <span class="badge badge-primary badge-pill">1</span> -->
-                                                                <button title="" class="pd-setting-ed"
+                                                                <button type="button" class="btn btn-warning" title=""
                                                                     data-original-title="เเก้ไข" data-toggle="modal"
-                                                                    data-target="#PrimaryModalftblack">
-                                                                    <i class="fa fa-pencil-square-o float-left"
-                                                                        aria-hidden="true">
-                                                                    </i>
-                                                                </button>
-                                                                <button data-toggle="tooltip" title=""
-                                                                    class="pd-setting-ed" data-original-title="ลบ"><i
-                                                                        class="fa fa-trash-o" aria-hidden="true"></i>
+                                                                    data-target="#PrimaryModalftblack<?=$rowTimeSlot["id"]?>">เเก้ไข
                                                                 </button>
 
 
+                                                                <a data-toggle="tooltip" title=""
+                                                                    href="admin_time_slot.php?deleteR=req&time_lot_id=<?=$rowTimeSlot["id"]?>"
+                                                                    type="button" class="btn btn-danger"
+                                                                    data-original-title="ลบ">ลบ
+                                                                </a>
 
-                                                                <div id="PrimaryModalftblack"
-                                                                    class="modal modal-edu-general default-popup-PrimaryModal PrimaryModal-bgcolor fade"
-                                                                    role="dialog">
+                                                                <div id="PrimaryModalftblack<?=$rowTimeSlot["id"]?>"
+                                                                    class="
+                                                                    modal modal-edu-general default-popup-PrimaryModal
+                                                                    fade" role="dialog">
                                                                     <div class="modal-dialog">
-                                                                        <div class="modal-content">
-                                                                            <div
-                                                                                class="modal-close-area modal-close-df">
-                                                                                <a class="close" data-dismiss="modal"
-                                                                                    href="#"><i
-                                                                                        class="fa fa-close"></i></a>
+                                                                        <form action="" method="post">
+                                                                            <div class="modal-content">
+                                                                                <div
+                                                                                    class="modal-close-area modal-close-df">
+                                                                                    <a class="close"
+                                                                                        data-dismiss="modal" href="#"><i
+                                                                                            class="fa fa-close"></i></a>
+                                                                                </div>
+                                                                                <div class="modal-body">
+                                                                                    <h2 class="text-warning"
+                                                                                        style="margin-bottom:1rem">
+                                                                                        เเก้ไขช่วงเวลา</h2>
+
+                                                                                    <!-- <i
+                                                                                    class="educate-icon educate-checked modal-check-pro"></i> -->
+                                                                                    <label for="">เวลา</label>
+                                                                                    <input required type="text"
+                                                                                        name="time_slot_time"
+                                                                                        value="<?=$rowTimeSlot["time_slot_time"]?>"
+                                                                                        class="form-control" required />
+                                                                                    <label
+                                                                                        for="">รายละเอียดช่วงเวลา</label>
+                                                                                    <input required type="text"
+                                                                                        name="time_slot_description"
+                                                                                        value="<?=$rowTimeSlot["time_slot_description"]?>"
+                                                                                        class="form-control" required />
+                                                                                    <input required type="hidden"
+                                                                                        name="bi_id"
+                                                                                        value="<?=$rowTimeSlot["id"]?>"
+                                                                                        class="form-control" required />
+                                                                                    <input type="hidden"
+                                                                                        name="update_user_time_slot"
+                                                                                        value="update_user_time_slot">
+                                                                                </div>
+                                                                                <div class="modal-footer">
+                                                                                    <button class="btn btn-success"
+                                                                                        type="submit">เเก้ไข</button>
+                                                                                    <button class="btn btn-danger"
+                                                                                        data-dismiss="modal">ยกเลิก</button>
+                                                                                    <!-- <a href="#">เเก้ไข</a>
+                                                                                    <a data-dismiss="modal"
+                                                                                        href="#">ยกเลิก
+                                                                                    </a> -->
+                                                                                </div>
                                                                             </div>
-                                                                            <div class="modal-body">
-                                                                                <i
-                                                                                    class="educate-icon educate-checked modal-check-pro"></i>
-                                                                                <h2>Awesome!</h2>
-                                                                                <p>The Modal plugin is a dialog
-                                                                                    box/popup window
-                                                                                    that is displayed on top of the
-                                                                                    current page</p>
-                                                                            </div>
-                                                                            <div
-                                                                                class="modal-footer footer-modal-admin">
-                                                                                <a data-dismiss="modal"
-                                                                                    href="#">Cancel</a>
-                                                                                <a href="#">Process</a>
-                                                                            </div>
-                                                                        </div>
+                                                                        </form>
                                                                     </div>
                                                                 </div>
+
+
 
                                                             </div>
                                                         </div>
@@ -226,73 +255,7 @@ $dateNow=date("Y-m-d");
 		============================================ -->
     <!-- <script src="js/tawk-chat.js"></script> -->
 
-    <script>
-    function selectInputIdFunc(resultTimeSlotNum) {
-        document.getElementById('selectInputId').style.display = "none";
-        console.log('resultTimeSlotNum', resultTimeSlotNum);
-        document.getElementById('fullQidNoti').style.display = "block";
-    }
 
-
-    let time_slot_id = 0;
-
-    function selectTimeSlot(time_slot_id) {
-        // console.log('selectTimeSlot', time_slot_id);
-        if (time_slot_id !== 0) {
-            document.getElementById('btnSubmit').style.display = "block";
-        }
-    }
-
-
-    let loadFile = function(event) {
-        let output = document.getElementById('output');
-        output.src = URL.createObjectURL(event.target.files[0]);
-        output.onload = function() {
-            URL.revokeObjectURL(output.src) // free memory
-        }
-    };
-
-
-    function checkJongQDate() {
-        const dateNow = `<?=$dateNow;?>`
-        let jongqDate = document.getElementById("jongq_date").value
-        let isBrfore = moment(jongqDate).isBefore(dateNow);
-        // console.log('dateNow', dateNow);
-        // console.log('jongqDate', jongqDate);
-        // console.log('isBrfore', isBrfore); 
-
-        let element = document.getElementById("validateJongQ");
-        let validateAlert = document.getElementById("validateAlert");
-        element.style.display = "block";
-        validateAlert.style.display = "block";
-
-        // console.log('element.style.display', element.style.display);
-        if (isBrfore) {
-            element.classList.add("text-danger");
-            element.style.display = "block";
-
-            validateAlert.classList.add("text-danger");
-            validateAlert.style.display = "block";
-
-            document.getElementById("readonlyId").readOnly = true;
-            document.getElementById("readonlyId").value = null
-
-        } else {
-            element.style.display = "none";
-            validateAlert.style.display = "none";
-
-            document.getElementById("readonlyId").readOnly = false;
-            // document.getElementById("readonlyId").value = null
-
-
-
-        }
-    }
-
-    function validate() {
-
-    }
-    </script>
 
 
 
@@ -301,53 +264,25 @@ $dateNow=date("Y-m-d");
 
 <?php 
 include_once("./configs/connect_db.php");
- 
-if(isset($_POST["update_user_prfile"])){
-    // $profile="555555555555";
-    $valueProfile= $_FILES["profile"]["name"];
 
-     $profile ="";
-   
-    if($valueProfile == null){
-       $profile = $userResult['profile'];
-    } else{
-       $dt_image1_time =  date("Y-m-d h:i:s");
-       $profile = uniqid() . $dt_image1_time . $_FILES["profile"]["name"]; 
-    }
 
-        //     $path = "./uploads/";
-        // move_uploaded_file($_FILES["profile"]["tmp_name"], "$path/$profile");
 
-    $sqlUpdate = "UPDATE `tb_users` SET  `full_name`='{$_POST["full_name"]}' ,`tel`='{$_POST["tel"]}' ,
-                  `username`='{$_POST["username"]}' , `email`='{$_POST["email"]}'  ,`profile`='$profile' 
-                   WHERE id='$user_id';";
+if(isset($_POST["add_user_time_slot"])){
+    
 
-    if (mysqli_query($conn, $sqlUpdate)) {
+    $sqlUpdate = "INSERT INTO `tb_time_slots`( `time_slot_time`, `time_slot_description`) 
+                  VALUES ('{$_POST["time_slot_time"]}', '{$_POST["time_slot_description"]}')";
 
-                   if($valueProfile !== null){
-                        $path = "./img/user/";
-                         move_uploaded_file($_FILES["profile"]["tmp_name"], "$path/$profile");
-
-                        // $file_slip= "./img/user/{$userResult['profile']}";
-                        // $status=unlink($file_slip);  
-
-                         @session_start(); 
-                          $_SESSION['username'] = $_POST["username"];  
-                          $_SESSION['full_name'] = $_POST["full_name"]    ;
-                        $_SESSION['email'] = $_POST["email"];  
-                        $_SESSION['profile'] =$profile;  
-                        $_SESSION['tel'] =  $_POST["tel"];  
-
-                    }
-
+    if (mysqli_query($conn, $sqlUpdate)) { 
+                   
                     echo "<script> 
                         Swal.fire({
                                 position: 'center',
                                 icon: 'success',
-                                title: 'เเก้ไขข้อมูลผู้ใช้สำเร็จ',
+                                title: 'เพิ่มช่วงเวลาสำเร็จ',
                                 showConfirmButton: false,
                                 timer: 1500
-                            }).then(()=> location = './update_user_profile.php')
+                            }).then(()=> location = './admin_time_slot.php')
 
                     </script>";
                 
@@ -358,13 +293,100 @@ if(isset($_POST["update_user_prfile"])){
                     "<script> 
                         Swal.fire({
                             icon: 'error',
-                            title: 'เเก้ไขข้อมูลผู้ใช้สำเร็จไม่สำเร็จ', 
+                            title: 'เพิ่มช่วงเวลาไม่สำเร็จ', 
                             text: 'โปรดตรวจสอบความถูกต้องของข้อมูล!',
-                        }).then(()=> location = './update_user_profile.php')
+                        }).then(()=> location = './admin_time_slot.php')
                   </script>";
            } 
  
 }
+ 
+if(isset($_POST["update_user_time_slot"])){
+    
+
+    $sqlUpdate = "UPDATE `tb_time_slots` SET `time_slot_time` = '{$_POST["time_slot_time"]}' 
+                 ,`time_slot_description` = '{$_POST["time_slot_description"]}' 
+                  WHERE `tb_time_slots`.`id` = '{$_POST["bi_id"]}';";
+
+    if (mysqli_query($conn, $sqlUpdate)) { 
+                   
+                    echo "<script> 
+                        Swal.fire({
+                                position: 'center',
+                                icon: 'success',
+                                title: 'เเก้ไขข้อมูล',
+                                showConfirmButton: false,
+                                timer: 1500
+                            }).then(()=> location = './admin_time_slot.php')
+
+                    </script>";
+                
+           }  
+           else  
+           {  
+                echo
+                    "<script> 
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'เเก้ไขข้อมูลไม่สำเร็จ', 
+                            text: 'โปรดตรวจสอบความถูกต้องของข้อมูล!',
+                        }).then(()=> location = './admin_time_slot.php')
+                  </script>";
+           } 
+ 
+}
+
+
+
+   if (isset($_GET["deleteR"] )) {
+                echo
+                    "<script> 
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'ยืนยันการลบข้อมูล?',
+                            text: 'ท่านเเน่ใจว่า ท่าต้องการลบข้อมูล!',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'ใช่',
+                            cancelButtonText: 'ไม่!'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                location = 'admin_time_slot.php?deleteR2=req&time_lot_id={$_GET["time_lot_id"]}'
+                            }else{
+                                location = 'admin_time_slot.php'
+                            }
+                        }); 
+                </script>";
+        }
+
+        //เช็อกว่่ามีการส่งค่า Get time_lot_id หรือไม่ (?time_lot_id=xxx)
+        if (isset($_GET["deleteR2"])) {
+
+            // คำสั่ง sql ในการลบข้อมูล ตาราง tbl_products โดยจะลบข้อมูลสินค้า p_id ที่ส่งมา
+            $sql = "DELETE FROM tb_time_slots WHERE id={$_GET["time_lot_id"]}";
+
+            if (mysqli_query($conn, $sql)) {
+                echo
+                    "<script> 
+                        Swal.fire(
+                            'ลบข้อมูลสำเร็จ!',
+                            'ท่านได้ลบข้อมูลเรียบร้อย',
+                            'success'
+                        ).then(()=> location = 'admin_time_slot.php')
+                    </script>";
+                //header('Location: admin_time_slot.php');
+            } else {
+                echo
+                    "<script> 
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'ลบข้อมูลไม่สำเร็จ', 
+                    }).then(()=> location = 'admin_time_slot.php')
+                </script>";
+            }
+ 
+        }
 
 ?>
 

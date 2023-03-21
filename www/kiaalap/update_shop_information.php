@@ -45,13 +45,13 @@ include_once("./configs/connect_db.php");
     <!-- Start Welcome area -->
     <div class="all-content-wrapper">
         <div class="container-fluid">
-            <div class="row">
+            <!-- <div class="row">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="logo-pro">
-                        <a href="index.html"><img class="main-logo" src="img/logo/logo.png" alt="" /></a>
+                        <a href="index.html"><img class="main-logo" src="img/profile-informations/profile-informations.png" alt="" /></a>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
         <?php include_once("./header.php") ?>
 
@@ -104,19 +104,7 @@ include_once("./configs/connect_db.php");
                                                         </div>
                                                     </div>
 
-                                                    <div class="form-group-inner">
-                                                        <div class="row">
-                                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                                                                <label
-                                                                    class="login2 pull-right pull-right-pro">โปรไฟล์ร้าน</label>
-                                                            </div>
-                                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <input type="text" name="tel"
-                                                                    value="<?=$userResult['tel']?>" class="form-control"
-                                                                    required />
-                                                            </div>
-                                                        </div>
-                                                    </div>
+
 
 
                                                     <div class="form-group-inner">
@@ -142,6 +130,20 @@ include_once("./configs/connect_db.php");
                                                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                                                                 <input type="text" name="bi_line"
                                                                     value="<?=$userResult['bi_line']?>"
+                                                                    class="form-control" required />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group-inner">
+                                                        <div class="row">
+                                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                                                <label class="login2 pull-right pull-right-pro">ไลน์
+                                                                    token (line notification token)</label>
+                                                            </div>
+                                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                                                <input type="text" name="bi_line_token"
+                                                                    value="<?=$userResult['bi_line_token']?>"
                                                                     class="form-control" required />
                                                             </div>
                                                         </div>
@@ -199,30 +201,15 @@ include_once("./configs/connect_db.php");
                                                             </div>
                                                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                                                                 <input type="file" class="form-control" accept="image/*"
-                                                                    name="profile" onchange="loadFile(event)" />
-                                                            </div>
-
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="form-group-inner">
-                                                        <div class="row">
-                                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                                                                <label class="login2 pull-right pull-right-pro">ไอค่อน
-                                                                    icon
-                                                                </label>
-                                                            </div>
-                                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
-                                                                <input type="file" class="form-control" accept="image/*"
-                                                                    name="profile" onchange="loadFile(event)" />
+                                                                    name="bi_profile" onchange="loadFile(event)" />
                                                             </div>
 
                                                         </div>
                                                     </div>
 
 
-                                                    <input type="hidden" value="update_user_prfile"
-                                                        name="update_user_prfile">
+                                                    <input type="hidden" value="update_shop_information"
+                                                        name="update_shop_information">
                                                     <div class="form-group-inner">
                                                         <div class="login-btn-inner">
                                                             <div class="row">
@@ -235,7 +222,7 @@ include_once("./configs/connect_db.php");
                                                                         </button> -->
                                                                         <button id="btnSubmit"
                                                                             class="btn btn-sm btn-warning login-submit"
-                                                                            type="submit">เเก้ไขข้อมูลผู้ใช้งาน
+                                                                            type="submit">เเก้ไขข้อมูลร้านตัดผม
                                                                         </button>
                                                                     </div>
                                                                 </div>
@@ -353,40 +340,41 @@ include_once("./configs/connect_db.php");
 <?php 
 include_once("./configs/connect_db.php");
  
-if(isset($_POST["update_user_prfile"])){
+if(isset($_POST["update_shop_information"])){
     // $profile="555555555555";
-    $valueProfile= $_FILES["profile"]["name"];
+    $valueBi_profile= $_FILES["bi_profile"]["name"];
 
-     $profile ="";
+     $bi_profile ="";
    
-    if($valueProfile == null){
-       $profile = $userResult['profile'];
+    if($valueBi_profile == null){
+       $bi_profile = $userResult['bi_profile'];
     } else{
        $dt_image1_time =  date("Y-m-d h:i:s");
-       $profile = uniqid() . $dt_image1_time . $_FILES["profile"]["name"]; 
+       $bi_profile = uniqid() . $dt_image1_time . $_FILES["bi_profile"]["name"]; 
     }
 
         //     $path = "./uploads/";
-        // move_uploaded_file($_FILES["profile"]["tmp_name"], "$path/$profile");
+        // move_uploaded_file($_FILES["bi_profile"]["tmp_name"], "$path/$bi_profile");
 
-    $sqlUpdate = "UPDATE `tb_users` SET  `full_name`='{$_POST["full_name"]}' ,`tel`='{$_POST["tel"]}' ,
-                  `username`='{$_POST["username"]}' , `email`='{$_POST["email"]}'  ,`profile`='$profile' 
-                   WHERE id='$user_id';";
+    $sqlUpdate = "UPDATE `tb_barbershop_informations` 
+                  SET  `bi_name`='{$_POST["bi_name"]}',`bi_tel`='{$_POST["bi_tel"]}',`bi_profile`='{$bi_profile}',
+                       `bi_email`='{$_POST["bi_email"]}',`bi_line`='{$_POST["bi_line"]}',`bi_descriptions`='{$_POST["bi_descriptions"]}',
+                       `bi_shop_owner`='{$_POST["bi_shop_owner"]}',`bi_line_token`='{$_POST["bi_line_token"]}' WHERE id='1';";
 
     if (mysqli_query($conn, $sqlUpdate)) {
 
-                   if($valueProfile !== null){
-                        $path = "./img/user/";
-                         move_uploaded_file($_FILES["profile"]["tmp_name"], "$path/$profile");
+                   if($valueBi_profile !== null){
+                        $path = "./img/profile-informations/";
+                         move_uploaded_file($_FILES["bi_profile"]["tmp_name"], "$path/$bi_profile");
 
-                        // $file_slip= "./img/user/{$userResult['profile']}";
+                        // $file_slip= "./img/profile-informations/{$userResult['bi_profile']}";
                         // $status=unlink($file_slip);  
 
                          @session_start(); 
                           $_SESSION['username'] = $_POST["username"];  
                           $_SESSION['full_name'] = $_POST["full_name"]    ;
                         $_SESSION['email'] = $_POST["email"];  
-                        $_SESSION['profile'] =$profile;  
+                        $_SESSION['bi_profile'] =$bi_profile;  
                         $_SESSION['tel'] =  $_POST["tel"];  
 
                     }
@@ -395,10 +383,10 @@ if(isset($_POST["update_user_prfile"])){
                         Swal.fire({
                                 position: 'center',
                                 icon: 'success',
-                                title: 'เเก้ไขข้อมูลผู้ใช้สำเร็จ',
+                                title: 'เเก้ไขข้อมูลร้านตัดผมสำเร็จ',
                                 showConfirmButton: false,
                                 timer: 1500
-                            }).then(()=> location = './update_user_profile.php')
+                            }).then(()=> location = './update_shop_information.php')
 
                     </script>";
                 
@@ -409,9 +397,9 @@ if(isset($_POST["update_user_prfile"])){
                     "<script> 
                         Swal.fire({
                             icon: 'error',
-                            title: 'เเก้ไขข้อมูลผู้ใช้สำเร็จไม่สำเร็จ', 
+                            title: 'เเก้ไขข้อมูลร้านตัดผมไม่สำเร็จ', 
                             text: 'โปรดตรวจสอบความถูกต้องของข้อมูล!',
-                        }).then(()=> location = './update_user_profile.php')
+                        }).then(()=> location = './update_shop_information.php')
                   </script>";
            } 
  
