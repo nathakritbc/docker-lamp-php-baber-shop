@@ -12,18 +12,21 @@ if( $_SESSION["user_role"] !=="ADMIN"){
  
 // $dd=date("Y-m-d");
 $dd=null;
+$isDateNow=true;
 
 
 
 include_once("./configs/connect_db.php");
-$sqlJongQLists = "SELECT jn.time_slot_id, jn.id,jn.jong_date,jn.jong_time,jn.jong_status,jn.jong_slip,jn.user_id,u.full_name,u.username 
-                  FROM tb_jongs jn INNER JOIN tb_users u ON jn.user_id = u.id 
+$sqlJongQLists = "SELECT ts.time_slot_description,jn.time_slot_id, jn.id,jn.jong_date,jn.jong_time,jn.jong_status,jn.jong_slip,jn.user_id,u.full_name,u.username 
+                  FROM tb_jongs jn INNER JOIN tb_users u ON jn.user_id = u.id  INNER JOIN tb_time_slots ts ON jn.time_slot_id = ts.id
                   ORDER BY jn.jong_date_time DESC;";
 
 if(isset($_GET["findDate"])){
 $dd=$_GET["findDate"];
-$sqlJongQLists = "SELECT jn.time_slot_id, jn.id,jn.jong_date,jn.jong_time,jn.jong_status,jn.jong_slip,jn.user_id,u.full_name,u.username 
-                  FROM tb_jongs jn INNER JOIN tb_users u ON jn.user_id = u.id 
+$isDateNow=false;
+
+$sqlJongQLists = "SELECT ts.time_slot_description,jn.time_slot_id, jn.id,jn.jong_date,jn.jong_time,jn.jong_status,jn.jong_slip,jn.user_id,u.full_name,u.username 
+                  FROM tb_jongs jn INNER JOIN tb_users u ON jn.user_id = u.id  INNER JOIN tb_time_slots ts ON jn.time_slot_id = ts.id
                  WHERE jn.jong_date='$dd' ORDER BY jn.jong_date_time DESC;";
 }
 
@@ -133,6 +136,80 @@ $resultJongQLists = mysqli_query($conn, $sqlJongQLists);
         <!-- Static Table Start -->
         <div class="data-table-area mg-b-15">
             <div class="container-fluid">
+
+                <?php if($isDateNow){?>
+                <div class="row" style="margin-top:2rem;margin-bottom:2rem;">
+
+                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                        <div
+                            class="hpanel shadow-inner hbgyellow bg-3 responsive-mg-b-30 res-tablet-mg-t-30 dk-res-t-pro-30">
+                            <div class="panel-body">
+                                <div class="text-center content-bg-pro">
+                                    <h3>ลำดับคิวปัจจุบัน</h3>
+                                    <p class="text-big font-light">
+                                        750
+                                    </p>
+                                    <!-- <small>
+                                        Lorem Ipsum passages and more recently with desktop published software.
+                                    </small> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                        <div class="hpanel shadow-inner  bg-4 res-tablet-mg-t-30 dk-res-t-pro-30">
+                            <div class="panel-body" style="background: #f0ad4e;">
+                                <div class="text-center content-bg-pro">
+                                    <h3>ลำดับคิวที่ต้องรอ</h3>
+                                    <p class="text-big font-light">
+                                        0,43
+                                    </p>
+                                    <!-- <small>
+                                        Lorem Ipsum passages and more recently with desktop published software.
+                                    </small> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                        <div class="hpanel shadow-inner hbgblue bg-2 responsive-mg-b-30">
+                            <div class="panel-body">
+                                <div class="text-center content-bg-pro">
+                                    <h3>ลำดับคิวของลูกค้า</h3>
+                                    <p class="text-big font-light">
+                                        160
+                                    </p>
+                                    <!-- <small>
+                                        Lorem Ipsum passages and more recently with desktop published software.
+                                    </small> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                        <div class="hpanel shadow-inner hbggreen bg-1 responsive-mg-b-30">
+                            <div class="panel-body">
+                                <div class="text-center content-bg-pro">
+                                    <h3>ลำดับคิวทั้งหมด</h3>
+                                    <p class="text-big font-light">
+                                        20
+                                    </p>
+                                    <!-- <small>
+                                        Lorem Ipsum passages and more recently with desktop published software.
+                                    </small> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                </div>
+                <?php }?>
+
                 <div class="row">
                     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                         <div class="sparkline13-list">
@@ -211,6 +288,23 @@ $resultJongQLists = mysqli_query($conn, $sqlJongQLists);
                                                         <strong>ยืนยันการจองเรียบร้อย!</strong>
                                                     </div>
                                                     <?php
+                                                    } elseif($rowJongQ["jong_status"]=="PROCEED"){?>
+                                                    <div class="alert alert-info" role="alert">
+                                                        <strong>กำลังเริ่มตัดผม!</strong>
+                                                    </div>
+                                                    <?php
+                                                    }  elseif($rowJongQ["jong_status"]=="CANCEL"){?>
+                                                    <div class="alert alert-danger" role="alert">
+                                                        <strong>ไม่รับการจอง!</strong>
+                                                    </div>
+                                                    <?php
+                                                    }  elseif($rowJongQ["jong_status"]=="SUCCESS"){?>
+                                                    <div class="alert"
+                                                        style="color:white;background-color:#0EEB80;border-color: ##0BEA7E;"
+                                                        role="alert">
+                                                        <strong>ตัดผมเสร็จเรียบร้อย!</strong>
+                                                    </div>
+                                                    <?php 
                                                     }else{?>
                                                     <div class="alert alert-danger" role="alert">
                                                         <strong>ยกเลิกการจอง!</strong>
@@ -221,13 +315,16 @@ $resultJongQLists = mysqli_query($conn, $sqlJongQLists);
                                                 <td class="datatable-ct">
 
                                                     <a type="button" href="#" data-toggle="modal"
-                                                        data-target="#PrimaryModalftblack" style="color:white"
+                                                        data-target="#PrimaryModalftblack_<?=$rowJongQ["id"]?>"
+                                                        style="color:white"
                                                         class="btn btn-sm btn-primary"><strong>ดูข้อมูลการจอง
                                                         </strong>
                                                     </a>
 
-                                                    <div id="PrimaryModalftblack"
-                                                        class="modal modal-edu-general default-popup-PrimaryModal PrimaryModal-bgcolor fade"
+
+
+                                                    <div id="PrimaryModalftblack_<?=$rowJongQ["id"]?>"
+                                                        class="modal modal-edu-general default-popup-PrimaryModal fade"
                                                         role="dialog">
                                                         <div class="modal-dialog">
                                                             <div class="modal-content">
@@ -236,15 +333,28 @@ $resultJongQLists = mysqli_query($conn, $sqlJongQLists);
                                                                             class="fa fa-close"></i></a>
                                                                 </div>
                                                                 <div class="modal-body">
-                                                                    <i
-                                                                        class="educate-icon educate-checked modal-check-pro"></i>
-                                                                    <h2>Awesome!</h2>
-                                                                    <p>The Modal plugin is a dialog box/popup window
-                                                                        that is displayed on top of the current page</p>
+                                                                    <div class="card" style="">
+                                                                        <img class="card-img-top"
+                                                                            src="./uploads/<?=$rowJongQ["jong_slip"]?>"
+                                                                            alt="Card image cap">
+                                                                        <div class="card-body">
+                                                                            <h5 class="card-title"
+                                                                                style="margin-top:2rem">ชื่อผู้จอง :
+                                                                                <?=$rowJongQ["full_name"]?></h5>
+                                                                            <h6>วันที่จอง : <?=$rowJongQ["jong_date"]?>
+                                                                            </h6>
+                                                                            <p class="card-text">ช่วงเวลาการจอง :
+                                                                                <?=$rowJongQ["time_slot_description"]?>
+                                                                            </p>
+                                                                            <!-- <a href="#" class="btn btn-primary">Go
+                                                                                somewhere
+                                                                            </a> -->
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
-                                                                <div class="modal-footer footer-modal-admin">
-                                                                    <a data-dismiss="modal" href="#">Cancel</a>
-                                                                    <a href="#">Process</a>
+                                                                <div class="modal-footer">
+                                                                    <!-- <a href="#">Process</a> -->
+                                                                    <a data-dismiss="modal" href="#">ปิด</a>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -262,7 +372,7 @@ $resultJongQLists = mysqli_query($conn, $sqlJongQLists);
                                                         </strong>
                                                     </a>
                                                     <a type="button"
-                                                        href="./jongq_list_admin.php?deleteR=req&jong_id=<?php echo $rowJongQ["id"]; ?>&time_slot_id=<?php echo $rowJongQ["time_slot_id"]; ?>&jong_slip=<?php echo $rowJongQ["jong_slip"]; ?>"
+                                                        href="./jongq_list_admin.php?cancelR=req&jong_id=<?php echo $rowJongQ["id"]; ?>&time_slot_id=<?php echo $rowJongQ["time_slot_id"]; ?>&jong_slip=<?php echo $rowJongQ["jong_slip"]; ?>"
                                                         class="btn btn-sm btn-danger text-white">
                                                         ไม่รับ
                                                     </a>
@@ -272,12 +382,25 @@ $resultJongQLists = mysqli_query($conn, $sqlJongQLists);
                                                     <!-- <button type="button"
                                                         class="btn btn-sm btn-primary"><strong>ดูการจอง </strong>
                                                     </button> -->
+                                                    <a type="button" class="btn btn-sm btn-purple"
+                                                        href="./jongq_list_admin.php?proceedR=PROCEED&jong_id=<?php echo $rowJongQ["id"]; ?>"
+                                                        style="color:white;background-color: #9675ce;">
+                                                        เริ่มตัดผม
+                                                    </a>
+
                                                     <?php
-                                                    }else{?>
-                                                    <button type="button"
-                                                        class="btn btn-sm btn-danger"><strong>ลบการจอง</strong>
-                                                    </button>
-                                                    <?php  }
+                                                    }elseif($rowJongQ["jong_status"]=="PROCEED"){?>
+                                                    <!-- <button type="button"
+                                                        class="btn btn-sm btn-primary"><strong>ดูการจอง </strong>
+                                                    </button> -->
+                                                    <a type="button" class="btn btn-sm btn-purple"
+                                                        href="./jongq_list_admin.php?successR=SUCCESS&jong_id=<?php echo $rowJongQ["id"]; ?>"
+                                                        style="color:white;background-color: #00e676;">
+                                                        ตัดผมเสร็จเรียบร้อย
+                                                    </a>
+
+                                                    <?php
+                                                    }
                                                    ?>
                                                 </td>
                                             </tr>
@@ -513,6 +636,155 @@ function findByDate() {
 
           
         }
+
+
+          if (isset($_GET["proceedR"] )) {
+                echo
+                    "<script> 
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'เปลี่ยนสถานะเป็นเริ่มตัดผม?',
+                            text: 'ท่านเเน่ใจว่า ท่านต้องเปลี่ยนสถานะเป็นเริ่มตัดผม!',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'ใช่',
+                            cancelButtonText: 'ไม่!'
+                        })
+                        .then((result) => {
+                            if (result.isConfirmed) {
+                                location = 'jongq_list_admin.php?proceedR2=req&jong_id={$_GET["jong_id"]}'
+                            }else{
+                                location = 'jongq_list_admin.php'
+                            }
+                        }); 
+                </script>";
+        }
+
+         if (isset($_GET["proceedR2"])) { 
+            $jong_id=$_GET["jong_id"];
+            $UpdateStatus = "UPDATE `tb_jongs` SET `jong_status` = 'PROCEED' WHERE `tb_jongs`.`id` = '$jong_id';"; 
+ 
+
+            if (mysqli_query($conn, $UpdateStatus)) {  
+                echo
+                    "<script> 
+                        Swal.fire(
+                            'เปลี่ยนสถานะเป็นเริ่มตัดผมสำเร็จ!',
+                            'ท่านได้เปลี่ยนสถานะเป็นเริ่มตัดผมคิวเรียบร้อย',
+                            'success'
+                        ).then(()=> location = 'jongq_list_admin.php')
+                    </script>"; 
+            } else {
+                echo
+                    "<script> 
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'เปลี่ยนสถานะเป็นเริ่มตัดผมไม่สำเร็จ', 
+                    }).then(()=> location = 'jongq_list_admin.php')
+                </script>";
+            }  
+        }
+
+        if (isset($_GET["successR"] )) {
+                echo
+                    "<script> 
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'เปลี่ยนสถานะเป็นตัดผมเสร็จเรียบร้อย?',
+                            text: 'ท่านเเน่ใจว่า ท่านต้องเปลี่ยนสถานะเป็นตัดผมเสร็จเรียบร้อย!',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'ใช่',
+                            cancelButtonText: 'ไม่!'
+                        })
+                        .then((result) => {
+                            if (result.isConfirmed) {
+                                location = 'jongq_list_admin.php?successR2=req&jong_id={$_GET["jong_id"]}'
+                            }else{
+                                location = 'jongq_list_admin.php'
+                            }
+                        }); 
+                </script>";
+        }
+
+         if (isset($_GET["successR2"])) { 
+            $jong_id=$_GET["jong_id"];
+            $UpdateStatus = "UPDATE `tb_jongs` SET `jong_status` = 'SUCCESS' WHERE `tb_jongs`.`id` = '$jong_id';"; 
+ 
+
+            if (mysqli_query($conn, $UpdateStatus)) {  
+                echo
+                    "<script> 
+                        Swal.fire(
+                            'เปลี่ยนสถานะเป็นเริ่มตัดผมสำเร็จ!',
+                            'ท่านได้เปลี่ยนสถานะเป็นเริ่มตัดผมคิวเรียบร้อย',
+                            'success'
+                        ).then(()=> location = 'jongq_list_admin.php')
+                    </script>"; 
+            } else {
+                echo
+                    "<script> 
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'เปลี่ยนสถานะเป็นเริ่มตัดผมเสร็จเเล้วไม่สำเร็จ', 
+                    }).then(()=> location = 'jongq_list_admin.php')
+                </script>";
+            }  
+        }
+
+
+
+          if (isset($_GET["cancelR"] )) {
+                echo
+                    "<script> 
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'เปลี่ยนสถานะเป็นเริ่มตัดผม?',
+                            text: 'ท่านเเน่ใจว่า ท่านต้องเปลี่ยนสถานะเป็นเริ่มตัดผม!',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'ใช่',
+                            cancelButtonText: 'ไม่!'
+                        })
+                        .then((result) => {
+                            if (result.isConfirmed) {
+                                location = 'jongq_list_admin.php?cancelR2=req&jong_id={$_GET["jong_id"]}'
+                            }else{
+                                location = 'jongq_list_admin.php'
+                            }
+                        }); 
+                </script>";
+        }
+
+         if (isset($_GET["cancelR2"])) { 
+            $jong_id=$_GET["jong_id"];
+            $UpdateStatus = "UPDATE `tb_jongs` SET `jong_status` = 'CANCEL' WHERE `tb_jongs`.`id` = '$jong_id';"; 
+ 
+
+            if (mysqli_query($conn, $UpdateStatus)) {  
+                echo
+                    "<script> 
+                        Swal.fire(
+                            'เปลี่ยนสถานะเป็นเริ่มตัดผมสำเร็จ!',
+                            'ท่านได้เปลี่ยนสถานะเป็นเริ่มตัดผมคิวเรียบร้อย',
+                            'success'
+                        ).then(()=> location = 'jongq_list_admin.php')
+                    </script>"; 
+            } else {
+                echo
+                    "<script> 
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'เปลี่ยนสถานะเป็นเริ่มตัดผมไม่สำเร็จ', 
+                    }).then(()=> location = 'jongq_list_admin.php')
+                </script>";
+            }  
+        }
+
+
         ?>
 
 </html>

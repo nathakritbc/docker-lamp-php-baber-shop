@@ -15,7 +15,7 @@
                      <li>
                          <a title="Landing Page" href="./jongq_user.php" aria-expanded="false"><span
                                  class="educate-icon educate-event icon-wrap sub-icon-mg" aria-hidden="true"></span>
-                             <span class="mini-click-non">การจอง</span>
+                             <span class="mini-click-non">จองคิวตัดผม</span>
                          </a>
                      </li>
                      <!-- <li>

@@ -177,6 +177,20 @@ include_once("./configs/connect_db.php");
                                                         </div>
                                                     </div>
 
+                                                    <div class="form-group-inner">
+                                                        <div class="row">
+                                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                                                <label
+                                                                    class="login2 pull-right pull-right-pro">ไอพีเเอดเดรสหรือลิ้งค์</label>
+                                                            </div>
+                                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                                                <input required type="text" name="ip_address"
+                                                                    value="<?=$userResult['ip_address']?>"
+                                                                    class="form-control" required />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
                                                     <!-- <div class="form-group-inner">
                                                         <div class="row">
                                                             <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
@@ -359,7 +373,8 @@ if(isset($_POST["update_shop_information"])){
     $sqlUpdate = "UPDATE `tb_barbershop_informations` 
                   SET  `bi_name`='{$_POST["bi_name"]}',`bi_tel`='{$_POST["bi_tel"]}',`bi_profile`='{$bi_profile}',
                        `bi_email`='{$_POST["bi_email"]}',`bi_line`='{$_POST["bi_line"]}',`bi_descriptions`='{$_POST["bi_descriptions"]}',
-                       `bi_shop_owner`='{$_POST["bi_shop_owner"]}',`bi_line_token`='{$_POST["bi_line_token"]}' WHERE id='1';";
+                       `bi_shop_owner`='{$_POST["bi_shop_owner"]}',`bi_line_token`='{$_POST["bi_line_token"]}',
+                       `ip_address`='{$_POST["ip_address"]}' WHERE id='1';";
 
     if (mysqli_query($conn, $sqlUpdate)) {
 
