@@ -19,7 +19,7 @@ $isDateNow=true;
 include_once("./configs/connect_db.php");
 $sqlJongQLists = "SELECT ts.time_slot_description,jn.time_slot_id, jn.id,jn.jong_date,jn.jong_time,jn.jong_status,jn.jong_slip,jn.user_id,u.full_name,u.username 
                   FROM tb_jongs jn INNER JOIN tb_users u ON jn.user_id = u.id  INNER JOIN tb_time_slots ts ON jn.time_slot_id = ts.id
-                  ORDER BY jn.jong_date_time DESC;";
+                  ORDER BY jn.jong_date_time  ASC;";
 
 if(isset($_GET["findDate"])){
 $dd=$_GET["findDate"];
@@ -27,10 +27,18 @@ $isDateNow=false;
 
 $sqlJongQLists = "SELECT ts.time_slot_description,jn.time_slot_id, jn.id,jn.jong_date,jn.jong_time,jn.jong_status,jn.jong_slip,jn.user_id,u.full_name,u.username 
                   FROM tb_jongs jn INNER JOIN tb_users u ON jn.user_id = u.id  INNER JOIN tb_time_slots ts ON jn.time_slot_id = ts.id
-                 WHERE jn.jong_date='$dd' ORDER BY jn.jong_date_time DESC;";
+                 WHERE jn.jong_date='$dd' ORDER BY jn.jong_date_time ASC;";
 }
 
 $resultJongQLists = mysqli_query($conn, $sqlJongQLists);
+
+$IS_PROCEED_SQL="SELECT jong_status FROM `tb_jongs` WHERE jong_status='PROCEED';";
+$IS_PROCEED_SQL_RES = mysqli_query($conn, $IS_PROCEED_SQL); 
+$IS_PROCEED_COUNT =mysqli_num_rows($IS_PROCEED_SQL_RES) ;
+
+
+
+
 
 ?>
 <!doctype html>
@@ -378,7 +386,11 @@ $resultJongQLists = mysqli_query($conn, $sqlJongQLists);
                                                     </a>
 
                                                     <?PHP  
-                                                   }elseif($rowJongQ["jong_status"]=="CONFIRM"){?>
+                                                   }elseif($rowJongQ["jong_status"]=="CONFIRM"){ 
+                                                    if($IS_PROCEED_COUNT <=0){
+                                                        
+                                                  
+                                                    ?>
                                                     <!-- <button type="button"
                                                         class="btn btn-sm btn-primary"><strong>ดูการจอง </strong>
                                                     </button> -->
@@ -389,6 +401,7 @@ $resultJongQLists = mysqli_query($conn, $sqlJongQLists);
                                                     </a>
 
                                                     <?php
+                                                      }
                                                     }elseif($rowJongQ["jong_status"]=="PROCEED"){?>
                                                     <!-- <button type="button"
                                                         class="btn btn-sm btn-primary"><strong>ดูการจอง </strong>
@@ -610,7 +623,21 @@ function findByDate() {
 
          if (isset($_GET["confirmR2"])) { 
             $jong_id=$_GET["jong_id"];
-            $UpdateStatus = "UPDATE `tb_jongs` SET `jong_status` = 'CONFIRM' WHERE `tb_jongs`.`id` = '$jong_id';"; 
+
+            $SQL_CONFIRM="SELECT * FROM `tb_jongs` WHERE jong_status='CONFIRM'  ORDER BY `tb_jongs`.`jong_date_time_confirm` DESC LIMIT 1;";
+              
+            $IS_CONFIRM_SQL_RES = mysqli_query($conn, $SQL_CONFIRM);  
+
+            $num =1;
+
+            if (mysqli_num_rows($IS_CONFIRM_SQL_RES) > 0) {  
+                $data_CONFIRM = mysqli_fetch_assoc($IS_CONFIRM_SQL_RES);
+                $num = intval($data_CONFIRM["num"])+1; 
+            }  
+ 
+
+            $UpdateStatus = "UPDATE `tb_jongs` SET `jong_status` = 'CONFIRM',jong_date_time_confirm=current_timestamp(),
+                            num='$num' WHERE `tb_jongs`.`id` = '$jong_id';"; 
  
 
             if (mysqli_query($conn, $UpdateStatus)) {  
@@ -628,8 +655,10 @@ function findByDate() {
                     Swal.fire({
                         icon: 'error',
                         title: 'ยืนยันการจองไม่สำเร็จ', 
-                    }).then(()=> location = 'jongq_list_admin.php')
+                    })
+                    //.then(()=> location = 'jongq_list_admin.php')
                 </script>";
+                 echo "Error: " . $SQL_CONFIRM . "<br>" . mysqli_error($conn);
             }
             // }
  
