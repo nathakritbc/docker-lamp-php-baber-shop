@@ -13,9 +13,15 @@
                             if($_SESSION["user_role"] ==="USER"){?>
 
                      <li>
-                         <a title="Landing Page" href="./jongq_user.php" aria-expanded="false"><span
+                         <a title="Landing Page" href="./jongq_list_user_toDay.php" aria-expanded="false"><span
                                  class="educate-icon educate-event icon-wrap sub-icon-mg" aria-hidden="true"></span>
-                             <span class="mini-click-non">จองคิวตัดผม</span>
+                             <span class="mini-click-non">รายการจองคิวของวันนี้</span>
+                         </a>
+                     </li>
+                     <li>
+                         <a title="Landing Page" href="./jongq_list_user.php" aria-expanded="false"><span
+                                 class="educate-icon educate-event icon-wrap sub-icon-mg" aria-hidden="true"></span>
+                             <span class="mini-click-non">รายการจองคิวทั้งหมด</span>
                          </a>
                      </li>
                      <!-- <li>
@@ -28,15 +34,28 @@
                      else{
                         ?>
                      <li>
-                         <a title="Landing Page" href="./jongq_list_admin.php" aria-expanded="false"><span
+                         <a title="Landing Page" href="./jongq_list_admin_toDay.php" aria-expanded="false"><span
                                  class="educate-icon educate-event icon-wrap sub-icon-mg" aria-hidden="true"></span>
-                             <span class="mini-click-non">รายการจองคิวตัดผม</span>
+                             <span class="mini-click-non">รายการจองคิวของวันนี้</span>
                          </a>
                      </li>
+                     <li>
+                         <a title="Landing Page" href="./jongq_list_admin.php" aria-expanded="false"><span
+                                 class="educate-icon educate-event icon-wrap sub-icon-mg" aria-hidden="true"></span>
+                             <span class="mini-click-non">รายการจองคิวทั้งหมด</span>
+                         </a>
+                     </li>
+
                      <?php     }
+
                      
                      ?>
-
+                     <li>
+                         <a title="Landing Page" href="./logout.php" aria-expanded="false"><span
+                                 class="educate-icon educate-event icon-wrap sub-icon-mg" aria-hidden="true"></span>
+                             <span class="mini-click-non">ออกจากระบบ</span>
+                         </a>
+                     </li>
                  </ul>
              </nav>
          </div>

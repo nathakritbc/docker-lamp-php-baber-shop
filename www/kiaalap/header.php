@@ -20,9 +20,12 @@
                                            </li>
                                            <?php 
                             if($_SESSION["user_role"] ==="USER"){?>
-                                           <li class="nav-item"><a href="./jongq_list_user.php"
-                                                   class="nav-link">รายการจอง</a>
+                                           <li class="nav-item"><a href="./jongq_user.php"
+                                                   class="nav-link">จองคิวตัดผม</a>
                                            </li>
+                                           <!-- <li class="nav-item"><a href="./jongq_list_user_toDay.php"
+                                                   class="nav-link">รายการจองคิวตัดผมวันนี้</a>
+                                           </li> -->
                                            <li class="nav-item"><a href="./update_user_profile.php"
                                                    class="nav-link">เเก้ไขข้อมูลผู้ใช้งาน</a>
                                            </li>
@@ -44,8 +47,8 @@
                                            </li>
                                            <?php   } ?>
 
-                                           <li class="nav-item"><a href="./logout.php" class="nav-link">ออกจากระบบ</a>
-                                           </li>
+                                           <!-- <li class="nav-item"><a href="./logout.php" class="nav-link">ออกจากระบบ</a>
+                                           </li> -->
                                        </ul>
                                    </div>
                                </div>
@@ -90,7 +93,8 @@
                                    <?php if($_SESSION["user_role"] ==="USER"){?>
                                    <li><a href="info_shop.php">หน้าหลัก</a></li>
                                    <li><a href="jongq_user.php">จองคิวตัดผม</a></li>
-                                   <li><a href="jongq_list_user.php">รายการจองคิวตัดผม</a></li>
+                                   <li><a href="jongq_list_user_toDay.php">รายการจองคิวตัดผมวันนี้</a></li>
+                                   <li><a href="jongq_list_user.php">รายการจองคิวตัดผมทั้งหมด</a></li>
                                    <li><a href="update_user_profile.php">เเก้ไขข้อมูลผู้ใช้งาน</a></li>
                                    <li><a href="update_user_password.php">เเก้ไขข้อมูลรหัสผ่าน</a></li>
                                    <li><a href="logout.php">ออกจากระบบ</a></li>
@@ -98,7 +102,8 @@
                                    <?php }elseif($_SESSION["user_role"] ==="ADMIN"){?>
 
                                    <li><a href="info_shop.php">หน้าหลัก</a></li>
-                                   <li><a href="jongq_list_admin.php">รายการจองคิวตัดผม</a></li>
+                                   <li><a href="jongq_list_admin_toDay.php">รายการจองคิวของวันนี้</a></li>
+                                   <li><a href="jongq_list_admin.php">รายการจองคิวตัดผมทั้งหมด</a></li>
                                    <li><a href="admin_time_slot.php">ช่วงเวลาการจอง</a></li>
                                    <li><a href="update_shop_information.php">ข้อมูลร้านตัดผม</a></li>
                                    <li><a href="admin_bank_account.php">จัดการบัญชีธนาคาร</a></li>

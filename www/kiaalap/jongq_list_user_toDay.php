@@ -22,7 +22,7 @@ $is_date_now=false;
 include_once("./configs/connect_db.php");
 $sqlJongQLists = "SELECT ts.time_slot_description,jn.id,jn.jong_date,jn.jong_time,jn.jong_status,jn.time_slot_id,jn.jong_slip,jn.user_id,u.full_name,u.username 
                   FROM tb_jongs jn INNER JOIN tb_users u ON jn.user_id = u.id  INNER JOIN tb_time_slots ts ON jn.time_slot_id = ts.id
-                  WHERE jn.user_id='$user_id'
+                 WHERE jn.jong_date='$dateNoww' AND jn.user_id='$user_id'
                   ORDER BY jn.jong_date_time DESC;";
 
 if(isset($_GET["findDate"])){
@@ -32,7 +32,6 @@ $isDateNow=false;
 if($dd == $dateNoww){
 $is_date_now=true;
 } 
-
 
 
 
@@ -50,7 +49,7 @@ $sqlCount = "SELECT * FROM tb_jongs WHERE jong_date='$dateNoww';";
 $resultJongQLists = mysqli_query($conn, $sqlCount);
 
 $sql="SELECT `id`, `jong_date`, `jong_time`, `jong_status`, `jong_slip`, `time_slot_id`, `user_id`, `jong_date_time`, `jong_date_time_confirm` FROM `tb_jongs` 
-      WHERE jong_status !='CANCEL' AND  jong_status !='TIME_OUT' AND  jong_date='$dateNoww' ;";
+      WHERE jong_status !='CANCEL' AND jong_status !='PENDING' AND jong_status !='TIME_OUT' AND jong_date='$dateNoww' ;";
       
 
 $result =mysqli_query($conn, $sql);
@@ -60,20 +59,30 @@ $result_num =mysqli_num_rows( $result);
 
 $resultJongQLists = mysqli_query($conn, $sqlJongQLists);
 
+function updateJongQ($conn,$jong_status,$status,$jongq_id){
+    if($jong_status=="PENDING" || $jong_status=="CONFIRM"  || $jong_status=="PROCEED"){
+        if($jong_status=="PROCEED"){
+             $sql="UPDATE `tb_jongs` SET `jong_status` = '$status' WHERE `tb_jongs`.`id` = '$jongq_id';";
+             $query=mysqli_query($conn,$sql);
+        } 
+    } 
+}
+
+function updateJongQ_PROCEED($conn,$jong_status,$status,$jongq_id){ 
+        if($jong_status=="PROCEED"){
+             $sql="UPDATE `tb_jongs` SET `jong_status` = '$status' WHERE `tb_jongs`.`id` = '$jongq_id';";
+             $query=mysqli_query($conn,$sql); 
+    } 
+}
+
 function updateNum($conn,$jong_date,$jongq_id){ 
     if($jong_date !=  date("Y-m-d")){
         $sql="UPDATE `tb_jongs` SET `num` = '0' WHERE `tb_jongs`.`id` = '$jongq_id';";
         $query=mysqli_query($conn,$sql); 
     }
 }
-
-function updateJongQ($conn,$jong_status,$status,$jongq_id){
-        if($jong_status=="PENDING" || $jong_status=="CONFIRM"  || $jong_status=="PROCEED"){
-        $sql="UPDATE `tb_jongs` SET `jong_status` = '$status' WHERE `tb_jongs`.`id` = '$jongq_id';";
-        $query=mysqli_query($conn,$sql);
-    } 
-}
  
+
 
   $i_PROCEED=0;
   while($row = mysqli_fetch_assoc($result)) {
@@ -83,10 +92,11 @@ function updateJongQ($conn,$jong_status,$status,$jongq_id){
         $i_PROCEED++;
   }
 
-  $sql_current="SELECT id,jong_status,num,jong_date,jong_date_time_confirm FROM `tb_jongs` 
-                WHERE jong_status='PROCEED' AND  jong_date='$dateNoww';";
+  $sql_current="SELECT id,jong_status,num,jong_date,jong_date_time_confirm FROM `tb_jongs` WHERE jong_status='PROCEED';";
   $res_current = mysqli_query($conn, $sql_current);
+
   $data_current=mysqli_fetch_assoc($res_current);
+
 
     function getQ($conn){ 
         $sql="SELECT * FROM `tb_jongs` WHERE jong_status='CONFIRM' ORDER BY `tb_jongs`.`jong_date_time_confirm` DESC LIMIT 1;";
@@ -303,15 +313,16 @@ function updateJongQ($conn,$jong_status,$status,$jongq_id){
                         <div class="sparkline13-list">
                             <div class="sparkline13-hd">
                                 <div class="main-sparkline13-hd">
-                                    <h1>รายการจองคิวร้านตัดผม</h1>
+                                    <h1>รายการจองคิวร้านตัดผมของวันนี้</h1>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group mt-5">
                                         <label for="">วันที่</label>
-                                        <input type="date" value="<?=$dd?>" id="findDateInput" class="form-control"
-                                            name="" aria-describedby="helpId" placeholder="" onChange="findByDate()">
+                                        <input type="date" value="<?=$dateNoww?>" readonly id="findDateInput"
+                                            class="form-control" name="" aria-describedby="helpId" placeholder=""
+                                            onChange="findByDate()">
                                     </div>
                                 </div>
                                 <!-- <div class="col-md-6">
@@ -360,9 +371,10 @@ function updateJongQ($conn,$jong_status,$status,$jongq_id){
                                                 updateNum($conn,$rowJongQ["jong_date"],$rowJongQ["id"]);
 
 
-                                              if($rowJongQ["jong_date"] != date("Y-m-d")){
+                                               if($rowJongQ["jong_date"] != date("Y-m-d")){
                                                  updateJongQ($conn,$rowJongQ["jong_status"],"TIME_OUT",$rowJongQ["id"]); 
                                                 }
+                                                // updateJongQ_PROCEED($conn,$rowJongQ["jong_status"],"TIME_OUT",$rowJongQ["id"]);
                                                 ?>
                                             <tr>
                                                 <td></td>
@@ -417,7 +429,7 @@ function updateJongQ($conn,$jong_status,$status,$jongq_id){
                                                     <?php    
                                                 if($rowJongQ["jong_status"]=="PENDING"){?>
                                                     <a type="button"
-                                                        href="./jongq_list_user.php?deleteR=req&jong_id=<?php echo $rowJongQ["id"]; ?>&time_slot_id=<?php echo $rowJongQ["time_slot_id"]; ?>&jong_slip=<?php echo $rowJongQ["jong_slip"]; ?>"
+                                                        href="./jongq_list_user_toDay.php?deleteR=req&jong_id=<?php echo $rowJongQ["id"]; ?>&time_slot_id=<?php echo $rowJongQ["time_slot_id"]; ?>&jong_slip=<?php echo $rowJongQ["jong_slip"]; ?>"
                                                         class="btn btn-sm btn-warning text-white">
                                                         ยกเลิก
                                                     </a>
@@ -446,7 +458,7 @@ function updateJongQ($conn,$jong_status,$status,$jongq_id){
                                                         class="btn btn-sm btn-primary"><strong>ดูข้อมูลการจอง
                                                         </strong>
                                                     </a>
-                                                    <a href="./jongq_list_user.php?deleteR=req&jong_id=<?php echo $rowJongQ["id"]; ?>&jong_slip=<?php echo $rowJongQ["time_slot_id"]; ?>&jong_slip=<?php echo $rowJongQ["time_slot_id"]; ?>"
+                                                    <a href="./jongq_list_user_toDay.php?deleteR=req&jong_id=<?php echo $rowJongQ["id"]; ?>&jong_slip=<?php echo $rowJongQ["time_slot_id"]; ?>&jong_slip=<?php echo $rowJongQ["time_slot_id"]; ?>"
                                                         type="button" class="btn btn-sm btn-danger">
                                                         ลบ
                                                     </a>
@@ -459,7 +471,7 @@ function updateJongQ($conn,$jong_status,$status,$jongq_id){
                                                         class="btn btn-sm btn-primary"><strong>ดูข้อมูลการจอง
                                                         </strong>
                                                     </a>
-                                                    <a href="./jongq_list_user.php?deleteR=req&jong_id=<?php echo $rowJongQ["id"]; ?>&jong_slip=<?php echo $rowJongQ["time_slot_id"]; ?>&jong_slip=<?php echo $rowJongQ["time_slot_id"]; ?>"
+                                                    <a href="./jongq_list_user_toDay.php?deleteR=req&jong_id=<?php echo $rowJongQ["id"]; ?>&jong_slip=<?php echo $rowJongQ["time_slot_id"]; ?>&jong_slip=<?php echo $rowJongQ["time_slot_id"]; ?>"
                                                         type="button" class="btn btn-sm btn-danger">
                                                         ลบ
                                                     </a>
@@ -471,14 +483,14 @@ function updateJongQ($conn,$jong_status,$status,$jongq_id){
                                                         class="btn btn-sm btn-primary"><strong>ดูข้อมูลการจอง
                                                         </strong>
                                                     </a>
-                                                    <a href="./jongq_list_user.php?deleteR=req&jong_id=<?php echo $rowJongQ["id"]; ?>&jong_slip=<?php echo $rowJongQ["time_slot_id"]; ?>&jong_slip=<?php echo $rowJongQ["time_slot_id"]; ?>"
+                                                    <a href="./jongq_list_user_toDay.php?deleteR=req&jong_id=<?php echo $rowJongQ["id"]; ?>&jong_slip=<?php echo $rowJongQ["time_slot_id"]; ?>&jong_slip=<?php echo $rowJongQ["time_slot_id"]; ?>"
                                                         type="button" class="btn btn-sm btn-danger">
                                                         ลบ
                                                     </a>
                                                     <?php
                                                     } 
                                                     else{?>
-                                                    <!-- <a href="./jongq_list_user.php?deleteR=req&jong_id=<?php echo $rowJongQ["id"]; ?>&jong_slip=<?php echo $rowJongQ["time_slot_id"]; ?>&jong_slip=<?php echo $rowJongQ["time_slot_id"]; ?>"
+                                                    <!-- <a href="./jongq_list_user_toDay.php?deleteR=req&jong_id=<?php echo $rowJongQ["id"]; ?>&jong_slip=<?php echo $rowJongQ["time_slot_id"]; ?>&jong_slip=<?php echo $rowJongQ["time_slot_id"]; ?>"
                                                         type="button" class="btn btn-sm btn-danger">
                                                         ลบ
                                                     </a> -->
@@ -638,7 +650,7 @@ function updateJongQ($conn,$jong_status,$status,$jongq_id){
 function findByDate() {
     const findDateInput = document.getElementById("findDateInput").value
     // console.log('findDateInput', findDateInput);
-    window.location = `./jongq_list_user.php?findDate=${findDateInput}`
+    window.location = `./jongq_list_user_toDay.php?findDate=${findDateInput}`
 }
 </script>
 
@@ -659,9 +671,9 @@ function findByDate() {
                             cancelButtonText: 'ไม่!'
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                location = 'jongq_list_user.php?deleteR2=req&jong_id={$_GET["jong_id"]}&time_slot_id={$_GET["time_slot_id"]}&jong_slip={$_GET["jong_slip"]}'
+                                location = 'jongq_list_user_toDay.php?deleteR2=req&jong_id={$_GET["jong_id"]}&time_slot_id={$_GET["time_slot_id"]}&jong_slip={$_GET["jong_slip"]}'
                             }else{
-                                location = 'jongq_list_user.php'
+                                location = 'jongq_list_user_toDay.php'
                             }
                         }); 
                 </script>";
@@ -679,9 +691,9 @@ function findByDate() {
                         Swal.fire({
                             icon: 'error',
                             title: 'ทางร้านได้ยืนยันการจองเเล้ว', 
-                        }).then(()=> location = 'jongq_list_user.php')
+                        }).then(()=> location = 'jongq_list_user_toDay.php')
                     </script>";
-                //header('Location: jongq_list_user.php'); 
+                //header('Location: jongq_list_user_toDay.php'); 
             }else{
                $sqlUpdateTimeSlot = "UPDATE tb_time_slots SET `time_slot_status` = '1'
                                   WHERE `tb_time_slots`.`id` = '{$_GET["time_slot_id"]}';";
@@ -697,16 +709,16 @@ function findByDate() {
                             'ลบข้อมูลสำเร็จ!',
                             'ท่านได้ลบข้อมูลเรียบร้อย',
                             'success'
-                        ).then(()=> location = 'jongq_list_user.php')
+                        ).then(()=> location = 'jongq_list_user_toDay.php')
                     </script>";
-                //header('Location: jongq_list_user.php');
+                //header('Location: jongq_list_user_toDay.php');
             } else {
                 echo
                     "<script> 
                     Swal.fire({
                         icon: 'error',
                         title: 'ลบข้อมูลไม่สำเร็จ', 
-                    }).then(()=> location = 'jongq_list_user.php')
+                    }).then(()=> location = 'jongq_list_user_toDay.php')
                 </script>";
             }
             }

@@ -10,16 +10,16 @@ if( $_SESSION["user_role"] !=="ADMIN"){
     exit;
 }
  
-
+// $dd=date("Y-m-d");
 $dd=null;
 $isDateNow=true;
 
-
+$ddNow= date("Y-m-d");
 
 include_once("./configs/connect_db.php");
 $sqlJongQLists = "SELECT ts.time_slot_description,jn.time_slot_id, jn.id,jn.jong_date,jn.jong_time,jn.jong_status,jn.jong_slip,jn.user_id,u.full_name,u.username 
                   FROM tb_jongs jn INNER JOIN tb_users u ON jn.user_id = u.id  INNER JOIN tb_time_slots ts ON jn.time_slot_id = ts.id
-                  ORDER BY jn.jong_date_time  ASC;";
+                   WHERE jn.jong_date='$ddNow' ORDER BY jn.jong_date_time  ASC;";
 
 if(isset($_GET["findDate"])){
 $dd=$_GET["findDate"];
@@ -27,7 +27,7 @@ $isDateNow=false;
 
 $sqlJongQLists = "SELECT ts.time_slot_description,jn.time_slot_id, jn.id,jn.jong_date,jn.jong_time,jn.jong_status,jn.jong_slip,jn.user_id,u.full_name,u.username 
                   FROM tb_jongs jn INNER JOIN tb_users u ON jn.user_id = u.id  INNER JOIN tb_time_slots ts ON jn.time_slot_id = ts.id
-                 WHERE jn.jong_date='$dd' ORDER BY jn.jong_date_time ASC;";
+                  WHERE jn.jong_date='$dd' ORDER BY jn.jong_date_time ASC;";
 }
 
 $resultJongQLists = mysqli_query($conn, $sqlJongQLists);
@@ -48,17 +48,16 @@ function updateJongQ($conn,$jong_status,$status,$jongq_id,$time_slot_id){
     } 
 }
 
-
 function updateNum($conn,$jong_date,$jongq_id){ 
-    $ddNnow=date("Y-m-d");
-    if($jong_date !=  $ddNnow){
+    if($jong_date !=  $ddNow){
         $sql="UPDATE `tb_jongs` SET `num` = '0' WHERE `tb_jongs`.`id` = '$jongq_id';";
         $query=mysqli_query($conn,$sql); 
     }
 }
 
 
-function checkUpdatePROCEED($conn,$jongq_id){  
+function checkUpdatePROCEED($conn,$jongq_id){ 
+
 
     // if($jong_date !=  date("Y-m-d")){
     //     $sql="UPDATE `tb_jongs` SET `num` = '0' WHERE `tb_jongs`.`id` = '$jongq_id';";
@@ -86,9 +85,6 @@ function checkUpdatePROCEED($conn,$jongq_id){
     return $res;
 }
 
-
-  $ddNow=date("Y-m-d");
-
 $sql="SELECT `id`, `jong_date`, `jong_time`, `jong_status`, `jong_slip`, `time_slot_id`, `user_id`, `jong_date_time`, `jong_date_time_confirm` FROM `tb_jongs` 
       WHERE jong_status !='CANCEL' AND jong_status !='PENDING' AND jong_status !='TIME_OUT' AND jong_date='$ddNow' ;";
       
@@ -103,7 +99,7 @@ $result_num =mysqli_num_rows( $result);
 
 
     function getQ($conn){ 
-        $sql="SELECT * FROM `tb_jongs` WHERE jong_status='CONFIRM' ORDER BY `tb_jongs`.`jong_date_time_confirm` DESC LIMIT 1;";
+        $sql="SELECT * FROM `tb_jongs` WHERE jong_status='CONFIRM' ORDER BY `tb_jongs`.`jong_date_time_confirm` ASC LIMIT 1;";
         $query=mysqli_query($conn,$sql);  
         $data_current=mysqli_fetch_assoc($query); 
         return $data_current["num"];
@@ -274,7 +270,6 @@ $result_num =mysqli_num_rows( $result);
                     </div>
 
 
-
                 </div>
                 <?php }?>
 
@@ -290,8 +285,9 @@ $result_num =mysqli_num_rows( $result);
                                 <div class="col-md-6">
                                     <div class="form-group mt-5">
                                         <label for="">วันที่</label>
-                                        <input type="date" value="<?=$dd?>" id="findDateInput" class="form-control"
-                                            name="" aria-describedby="helpId" placeholder="" onChange="findByDate()">
+                                        <input type="date" value="<?=date("Y-m-d")?>" readonly id="findDateInput"
+                                            class="form-control" name="" aria-describedby="helpId" placeholder=""
+                                            onChange="findByDate()">
                                     </div>
                                 </div>
                                 <!-- <div class="col-md-6">
@@ -336,11 +332,12 @@ $result_num =mysqli_num_rows( $result);
                                             <?php 
                                         if(mysqli_num_rows($resultJongQLists)>0){ 
                                             while($rowJongQ=mysqli_fetch_assoc($resultJongQLists)){
-                                                 updateNum($conn,$rowJongQ["jong_date"],$rowJongQ["id"]);
-                                                
+
                                                 if($rowJongQ["jong_date"] != date("Y-m-d")){
-                                                 updateJongQ($conn,$rowJongQ["jong_status"],"TIME_OUT",$rowJongQ["id"],$rowJongQ["time_slot_id"]); 
+                                                  updateJongQ($conn,$rowJongQ["jong_status"],"TIME_OUT",$rowJongQ["id"],$rowJongQ["time_slot_id"]); 
                                                 }
+
+                                                // updateNum($conn,$rowJongQ["jong_date"],$rowJongQ["id"]);
 
                                                 ?>
                                             <tr>
@@ -444,7 +441,58 @@ $result_num =mysqli_num_rows( $result);
 
 
                                                     <!-- <i class="fa fa-check"></i>  -->
+                                                    <?php    
+                                                if($rowJongQ["jong_status"]=="PENDING"){ 
+                                                    ?>
 
+                                                    <a type="button"
+                                                        href="./jongq_list_admin_toDay.php?confirmR=req&jong_id=<?php echo $rowJongQ["id"]; ?>"
+                                                        type="button"
+                                                        class="btn btn-sm btn-success"><strong>ยืนยันการจอง
+                                                        </strong>
+                                                    </a>
+
+                                                    <?php 
+                                                    // }
+?>
+
+                                                    <a type="button"
+                                                        href="./jongq_list_admin_toDay.php?cancelR=req&jong_id=<?php echo $rowJongQ["id"]; ?>&time_slot_id=<?php echo $rowJongQ["time_slot_id"]; ?>&jong_slip=<?php echo $rowJongQ["jong_slip"]; ?>"
+                                                        class="btn btn-sm btn-danger text-white">
+                                                        ไม่รับ
+                                                    </a>
+
+                                                    <?PHP  
+                                                   }elseif($rowJongQ["jong_status"]=="CONFIRM"){ 
+                                                    if($IS_PROCEED_COUNT <=0){
+                                                        
+                                                     $checkUpdatePROCEED=   checkUpdatePROCEED($conn,$rowJongQ["id"]);
+                                                  if($checkUpdatePROCEED==1){
+
+                                                    //  }
+                                                  
+                                                    ?>
+                                                    <!-- <button type="button"
+                                                        class="btn btn-sm btn-primary"><strong>ดูการจอง </strong>
+                                                    </button> -->
+                                                    <a type="button" class="btn btn-sm btn-purple"
+                                                        href="./jongq_list_admin_toDay.php?proceedR=PROCEED&jong_id=<?php echo $rowJongQ["id"]; ?>"
+                                                        style="color:white;background-color: #9675ce;">
+                                                        เริ่มตัดผม
+                                                    </a>
+
+                                                    <?php
+                                                  }
+                                                      }
+                                                    }elseif($rowJongQ["jong_status"]=="PROCEED"){?>
+                                                    <!-- <button type="button"
+                                                        class="btn btn-sm btn-primary"><strong>ดูการจอง </strong>
+                                                    </button> -->
+                                                    <a type="button" class="btn btn-sm btn-purple"
+                                                        href="./jongq_list_admin_toDay.php?successR=SUCCESS&jong_id=<?php echo $rowJongQ["id"]; ?>"
+                                                        style="color:white;background-color: #00e676;">
+                                                        ตัดผมเสร็จเรียบร้อย
+                                                    </a>
 
                                                     <?php
                                                     }
@@ -454,7 +502,7 @@ $result_num =mysqli_num_rows( $result);
 
                                             <?php
                                             }
-                                     
+                                        }
                                         ?>
 
                                         </tbody>
@@ -554,7 +602,7 @@ $result_num =mysqli_num_rows( $result);
 function findByDate() {
     const findDateInput = document.getElementById("findDateInput").value
     // console.log('findDateInput', findDateInput);
-    window.location = `./jongq_list_admin.php?findDate=${findDateInput}`
+    window.location = `./jongq_list_admin_toDay.php?findDate=${findDateInput}`
 }
 </script>
 
@@ -577,9 +625,9 @@ function findByDate() {
                             cancelButtonText: 'ไม่!'
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                location = 'jongq_list_admin.php?deleteR2=req&jong_id={$_GET["jong_id"]}&time_slot_id={$_GET["time_slot_id"]}&jong_slip={$_GET["jong_slip"]}'
+                                location = 'jongq_list_admin_toDay.php?deleteR2=req&jong_id={$_GET["jong_id"]}&time_slot_id={$_GET["time_slot_id"]}&jong_slip={$_GET["jong_slip"]}'
                             }else{
-                                location = 'jongq_list_admin.php'
+                                location = 'jongq_list_admin_toDay.php'
                             }
                         }); 
                 </script>";
@@ -597,9 +645,9 @@ function findByDate() {
             //             Swal.fire({
             //                 icon: 'error',
             //                 title: 'ทางร้านได้ยืนยันการจองเเล้ว', 
-            //             }).then(()=> location = 'jongq_list_admin.php')
+            //             }).then(()=> location = 'jongq_list_admin_toDay.php')
             //         </script>";
-            //     //header('Location: jongq_list_admin.php'); 
+            //     //header('Location: jongq_list_admin_toDay.php'); 
             // }else{
                $sqlUpdateTimeSlot = "UPDATE tb_time_slots SET `time_slot_status` = '1'
                                   WHERE `tb_time_slots`.`id` = '{$_GET["time_slot_id"]}';";
@@ -615,16 +663,16 @@ function findByDate() {
                             'ลบข้อมูลสำเร็จ!',
                             'ท่านได้ลบข้อมูลเรียบร้อย',
                             'success'
-                        ).then(()=> location = 'jongq_list_admin.php')
+                        ).then(()=> location = 'jongq_list_admin_toDay.php')
                     </script>";
-                //header('Location: jongq_list_admin.php');
+                //header('Location: jongq_list_admin_toDay.php');
             } else {
                 echo
                     "<script> 
                     Swal.fire({
                         icon: 'error',
                         title: 'ลบข้อมูลไม่สำเร็จ', 
-                    }).then(()=> location = 'jongq_list_admin.php')
+                    }).then(()=> location = 'jongq_list_admin_toDay.php')
                 </script>";
             }
             // }
@@ -647,9 +695,9 @@ function findByDate() {
                         })
                         .then((result) => {
                             if (result.isConfirmed) {
-                                location = 'jongq_list_admin.php?confirmR2=req&jong_id={$_GET["jong_id"]}'
+                                location = 'jongq_list_admin_toDay.php?confirmR2=req&jong_id={$_GET["jong_id"]}'
                             }else{
-                                location = 'jongq_list_admin.php'
+                                location = 'jongq_list_admin_toDay.php'
                             }
                         }); 
                 </script>";
@@ -657,25 +705,33 @@ function findByDate() {
 
          if (isset($_GET["confirmR2"])) { 
             $jong_id=$_GET["jong_id"];
-
             $dddNow=date('Y-m-d');
-            $SQL_CONFIRM="SELECT id,jong_date_time_confirm ,num,jong_date,jong_date_time FROM `tb_jongs` 
-                         WHERE jong_date_time_confirm IS NOT NULL AND jong_date='$dddNow' ORDER BY jong_date_time_confirm ASC LIMIT 1;";
+
+           $SQL_CONFIRM="SELECT id,jong_date_time_confirm ,num,jong_date,jong_date_time FROM `tb_jongs` WHERE jong_date_time_confirm IS NOT NULL AND jong_date='$dddNow' 
+                         ORDER BY jong_date_time_confirm ASC LIMIT 1;";
               
+            // $SQL_CONFIRM="SELECT * FROM `tb_jongs` WHERE jong_status !='CANCEL' AND jong_status !='PENDING' AND jong_status !='TIME_OUT'  ORDER BY `tb_jongs`.`jong_date_time_confirm` DESC LIMIT 1;";
+              
+
             $IS_CONFIRM_SQL_RES = mysqli_query($conn, $SQL_CONFIRM);  
 
             $num =1;
 
-            if (mysqli_num_rows($IS_CONFIRM_SQL_RES) == 0) {  
-               $UpdateStatus = "UPDATE `tb_jongs` SET `jong_status` = 'CONFIRM',jong_date_time_confirm=current_timestamp(),
-                              num='1' WHERE `tb_jongs`.`id` = '$jong_id';"; 
-            }  else{
-                $data_CONFIRM = mysqli_fetch_assoc($IS_CONFIRM_SQL_RES);
-                $num = intval($data_CONFIRM["num"])+1; 
-                $UpdateStatus = "UPDATE `tb_jongs` SET `jong_status` = 'CONFIRM',jong_date_time_confirm=current_timestamp(),
-                              num='$num' WHERE `tb_jongs`.`id` = '$jong_id';"; 
-            }
+            if (mysqli_num_rows($IS_CONFIRM_SQL_RES) > 0) {  
+               $SQL ="SELECT id,jong_date_time_confirm ,num,jong_date,jong_date_time FROM `tb_jongs` WHERE jong_date_time_confirm IS NOT NULL AND jong_date='$dddNow' 
+                         ORDER BY num DESC LIMIT 1;";
+                $RES = mysqli_query($conn, $SQL);  
+
+                $data_CONFIRM = mysqli_fetch_assoc($RES);
+                $num =  intval($data_CONFIRM["num"])+1 ;
+            }   
  
+
+            // $UpdateStatus = "UPDATE `tb_jongs` SET `jong_status` = 'CONFIRM',jong_date_time_confirm=current_timestamp(),
+            //                 num='$num' WHERE `tb_jongs`.`id` = '$jong_id';"; 
+
+           $UpdateStatus = "UPDATE `tb_jongs` SET `jong_status` = 'CONFIRM',jong_date_time_confirm=current_timestamp(),
+                            num='$num' WHERE `tb_jongs`.`id` = '$jong_id';"; 
  
  
 
@@ -686,7 +742,7 @@ function findByDate() {
                             'ยืนยันการจองสำเร็จ!',
                             'ท่านได้ยืนยันการจองคิวตัดผมเรียบร้อยเรียบร้อย',
                             'success'
-                        ).then(()=> location = 'jongq_list_admin.php')
+                        ).then(()=> location = 'jongq_list_admin_toDay.php')
                     </script>"; 
             } else {
                 echo
@@ -695,7 +751,7 @@ function findByDate() {
                         icon: 'error',
                         title: 'ยืนยันการจองไม่สำเร็จ', 
                     })
-                    //.then(()=> location = 'jongq_list_admin.php')
+                    //.then(()=> location = 'jongq_list_admin_toDay.php')
                 </script>";
                  echo "Error: " . $SQL_CONFIRM . "<br>" . mysqli_error($conn);
             }
@@ -721,9 +777,9 @@ function findByDate() {
                         })
                         .then((result) => {
                             if (result.isConfirmed) {
-                                location = 'jongq_list_admin.php?proceedR2=req&jong_id={$_GET["jong_id"]}'
+                                location = 'jongq_list_admin_toDay.php?proceedR2=req&jong_id={$_GET["jong_id"]}'
                             }else{
-                                location = 'jongq_list_admin.php'
+                                location = 'jongq_list_admin_toDay.php'
                             }
                         }); 
                 </script>";
@@ -741,7 +797,7 @@ function findByDate() {
                             'เปลี่ยนสถานะเป็นเริ่มตัดผมสำเร็จ!',
                             'ท่านได้เปลี่ยนสถานะเป็นเริ่มตัดผมคิวเรียบร้อย',
                             'success'
-                        ).then(()=> location = 'jongq_list_admin.php')
+                        ).then(()=> location = 'jongq_list_admin_toDay.php')
                     </script>"; 
             } else {
                 echo
@@ -749,7 +805,7 @@ function findByDate() {
                     Swal.fire({
                         icon: 'error',
                         title: 'เปลี่ยนสถานะเป็นเริ่มตัดผมไม่สำเร็จ', 
-                    }).then(()=> location = 'jongq_list_admin.php')
+                    }).then(()=> location = 'jongq_list_admin_toDay.php')
                 </script>";
             }  
         }
@@ -769,9 +825,9 @@ function findByDate() {
                         })
                         .then((result) => {
                             if (result.isConfirmed) {
-                                location = 'jongq_list_admin.php?successR2=req&jong_id={$_GET["jong_id"]}'
+                                location = 'jongq_list_admin_toDay.php?successR2=req&jong_id={$_GET["jong_id"]}'
                             }else{
-                                location = 'jongq_list_admin.php'
+                                location = 'jongq_list_admin_toDay.php'
                             }
                         }); 
                 </script>";
@@ -789,7 +845,7 @@ function findByDate() {
                             'เปลี่ยนสถานะเป็นเริ่มตัดผมสำเร็จ!',
                             'ท่านได้เปลี่ยนสถานะเป็นเริ่มตัดผมคิวเรียบร้อย',
                             'success'
-                        ).then(()=> location = 'jongq_list_admin.php')
+                        ).then(()=> location = 'jongq_list_admin_toDay.php')
                     </script>"; 
             } else {
                 echo
@@ -797,7 +853,7 @@ function findByDate() {
                     Swal.fire({
                         icon: 'error',
                         title: 'เปลี่ยนสถานะเป็นเริ่มตัดผมเสร็จเเล้วไม่สำเร็จ', 
-                    }).then(()=> location = 'jongq_list_admin.php')
+                    }).then(()=> location = 'jongq_list_admin_toDay.php')
                 </script>";
             }  
         }
@@ -819,9 +875,9 @@ function findByDate() {
                         })
                         .then((result) => {
                             if (result.isConfirmed) {
-                                location = 'jongq_list_admin.php?cancelR2=req&jong_id={$_GET["jong_id"]}'
+                                location = 'jongq_list_admin_toDay.php?cancelR2=req&jong_id={$_GET["jong_id"]}'
                             }else{
-                                location = 'jongq_list_admin.php'
+                                location = 'jongq_list_admin_toDay.php'
                             }
                         }); 
                 </script>";
@@ -839,7 +895,7 @@ function findByDate() {
                             'เปลี่ยนสถานะเป็นเริ่มตัดผมสำเร็จ!',
                             'ท่านได้เปลี่ยนสถานะเป็นเริ่มตัดผมคิวเรียบร้อย',
                             'success'
-                        ).then(()=> location = 'jongq_list_admin.php')
+                        ).then(()=> location = 'jongq_list_admin_toDay.php')
                     </script>"; 
             } else {
                 echo
@@ -847,7 +903,7 @@ function findByDate() {
                     Swal.fire({
                         icon: 'error',
                         title: 'เปลี่ยนสถานะเป็นเริ่มตัดผมไม่สำเร็จ', 
-                    }).then(()=> location = 'jongq_list_admin.php')
+                    }).then(()=> location = 'jongq_list_admin_toDay.php')
                 </script>";
             }  
         }

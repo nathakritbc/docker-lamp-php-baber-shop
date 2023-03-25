@@ -11,9 +11,11 @@ if( $_SESSION["user_role"] !=="USER"){
 $dateNow=date("Y-m-d");
 include_once("./configs/connect_db.php");
 
-$sqlTimeSlot = "SELECT * FROM tb_time_slots WHERE time_slot_status='1';";
+$sqlTimeSlot = "SELECT * FROM tb_time_slots WHERE time_slot_status='1' ORDER BY `tb_time_slots`.`time_slot_description` ASC;";
 $resultTimeSlot = mysqli_query($conn, $sqlTimeSlot);
 
+$sqlTimeSlot="SELECT * FROM `tb_payments` ";
+$queryTimeSlot=   mysqli_query($conn, $sqlTimeSlot);
 
 ?>
 
@@ -22,7 +24,7 @@ $resultTimeSlot = mysqli_query($conn, $sqlTimeSlot);
 
 <head>
 
-    <title>Basic Form Element | Kiaalap - Kiaalap Admin Template</title>
+    <title>จองคิวร้านตัดผม</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
 
     <?php include_once("./head_fragment.php") ?>
@@ -99,11 +101,47 @@ $resultTimeSlot = mysqli_query($conn, $sqlTimeSlot);
                                                                         <strong>Oh snap!</strong> Change a few things up
                                                                         and try submitting again.
                                                                     </p>
+
                                                                 </div>
 
+                                                                <!-- <h4 class="login2 pull-left pull-left-pro">
+                                                                    เลขที่บัญชีการชำระเงิน</h4> -->
 
+                                                                <ul class="list-group mt-5" style="margin-top:2rem">
+
+                                                                    <?php 
+                                                if (mysqli_num_rows($queryTimeSlot) > 0) {
+                                                    while($rowTimeSlot = mysqli_fetch_assoc($queryTimeSlot)) {
+                                                        ?>
+                                                                    <li
+                                                                        class="list-group-item d-flex justify-content-between align-items-center">
+                                                                        <div class="row justify-content-end">
+                                                                            <div class="col-md-10">
+                                                                                <h4 class="card-title text-primary">
+                                                                                    <?=$rowTimeSlot["payment_bank_name"]?>
+                                                                                </h4>
+                                                                                <h5 class="card-title">
+                                                                                    <?=$rowTimeSlot["payment_name"]?>
+                                                                                </h5>
+                                                                                <p><?=$rowTimeSlot["payment_number"]?>
+                                                                                </p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </li>
+
+
+                                                                    <?php     }
+                                                }else{
+                                                    echo "<h1>ไม่พบข้อมูล</h1>";
+                                                }
+                                                
+                                                ?>
+                                                                </ul>
 
                                                             </div>
+
+
+
                                                         </div>
                                                     </div>
 
