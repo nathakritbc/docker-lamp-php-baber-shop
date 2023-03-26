@@ -6,19 +6,18 @@
        
        $token = $data["bi_line_token"];  
        $ip_address = $data["ip_address"];  
-
-    //    $token = "8YXQMYZMXWK0F0GTY15TBNQN4z9nr5h23WVmJ7VA9Cx";  
+ 
 
         $input = json_decode(file_get_contents("php://input"));
         define('LINE_API', "https://notify-api.line.me/api/notify");
         $urlOfficer = $ip_address."/kiaalap/jongq_list_user.php";
-        //ไอดีเจ้าหน้าที่ที่จะส่งไปหา 
+         
         $lineMessages = "lineMessages";
-        //$token = "od6XlKiHhWvcErGcHz7NiKNwoGUxsuwnxPapYRB6v9n"; //ใส่Token ที่copy เอาไว้
+        //$token = "od6XlKiHhWvcErGcHz7NiKNwoGUxsuwnxPapYRB6v9n"; 
         $str = "{$lineMessages}😍🥰🥰🥰😘😘 ตรวจสอบรายการเเจ้งซ่อม {$urlOfficer}"; //ข้อความที่ต้องการส่ง สูงสุด 1000 ตัวอักษร
 
-        $stickerPkg = 1; //stickerPackageId
-        $stickerId = 11; //stickerId
+        $stickerPkg = 11537; //stickerPackageId
+        $stickerId = 52002768; //stickerId
 
         function notify_message($message, $stickerPkg, $stickerId, $token)
         {

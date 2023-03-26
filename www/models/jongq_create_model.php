@@ -61,12 +61,42 @@ function createJongQ($conn,$jong_date,$time_slot_id,$user_id,$jong_slip){
       
       $sqlUpdate = "UPDATE `tb_time_slots` SET `time_slot_status` = '0' 
                       WHERE `tb_time_slots`.`id` = '$time_slot_id';";  
+        
+
+
 
         if (mysqli_query($conn, $sql)) {
         // echo "New record created successfully";
         mysqli_query($conn, $sqlUpdate);
         $path = "./uploads/";
         move_uploaded_file($_FILES["jong_slip"]["tmp_name"], "$path/$jong_slip");
+
+        $url = "http://localhost/line-notification.php";
+
+       $sql_select="SELECT * FROM `tb_jongs` ORDER BY id DESC LIMIT 1;";  
+       $query_select=mysqli_query($conn, $sql_select);  
+       $data_select= mysqli_fetch_assoc($query_select);   
+       $data_select_id=$data_select["id"];
+       
+        
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => '',
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 0,
+        CURLOPT_FOLLOWLOCATION => true,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => 'POST',
+        CURLOPT_POSTFIELDS => array('acction' => 'jongq_acction','jongq_id' => $data_select_id),
+        ));
+
+        $response = curl_exec($curl);
+
+        curl_close($curl);
+
         echo "<script> 
                 Swal.fire({
                         position: 'center',
