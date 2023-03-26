@@ -97,16 +97,34 @@ function updateNum($conn,$jong_date,$jongq_id){
 
   $data_current=mysqli_fetch_assoc($res_current);
 
-
+  
     function getQ($conn){ 
-        $sql="SELECT * FROM `tb_jongs` WHERE jong_status='CONFIRM' ORDER BY `tb_jongs`.`jong_date_time_confirm` DESC LIMIT 1;";
+        $sql="SELECT * FROM `tb_jongs` WHERE jong_status='CONFIRM' ;";
+        $result=mysqli_query($conn,$sql);  
+        if(mysqli_num_rows($result)>0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+
+    // function getQ($conn){ 
+    //     $sql="SELECT * FROM `tb_jongs` WHERE jong_status='CONFIRM' ORDER BY `tb_jongs`.`jong_date_time_confirm` DESC LIMIT 1;";
+    //     $query=mysqli_query($conn,$sql);  
+    //     $data_current=mysqli_fetch_assoc($query); 
+    //     return $data_current["num"];
+    // }
+
+   function getQ_SUCCESS($conn){ 
+        $sql="SELECT * FROM `tb_jongs` WHERE jong_status='SUCCESS' ORDER BY `tb_jongs`.`jong_date_time_confirm` DESC LIMIT 1;";
         $query=mysqli_query($conn,$sql);  
         $data_current=mysqli_fetch_assoc($query); 
         return $data_current["num"];
     }
 
-   function getQ_SUCCESS($conn){ 
-        $sql="SELECT * FROM `tb_jongs` WHERE jong_status='SUCCESS' ORDER BY `tb_jongs`.`jong_date_time_confirm` DESC LIMIT 1;";
+    function getQ_CONFIRM($conn){ 
+        $sql="SELECT * FROM `tb_jongs` WHERE jong_status='CONFIRM' ORDER BY `tb_jongs`.`jong_date_time_confirm` DESC LIMIT 1;";
         $query=mysqli_query($conn,$sql);  
         $data_current=mysqli_fetch_assoc($query); 
         return $data_current["num"];
@@ -251,7 +269,10 @@ function updateNum($conn,$jong_date,$jongq_id){
                                               }else{
                                                 if( getQ_SUCCESS($conn)){ 
                                                      echo   getQ_SUCCESS($conn);
-                                                }else{
+                                                }elseif(getQ_CONFIRM($conn)){
+                                                     echo   getQ_CONFIRM($conn);
+                                                }
+                                                else{
                                                   echo 0;
                                                 }
                                                 
@@ -458,10 +479,10 @@ function updateNum($conn,$jong_date,$jongq_id){
                                                         class="btn btn-sm btn-primary"><strong>ดูข้อมูลการจอง
                                                         </strong>
                                                     </a>
-                                                    <a href="./jongq_list_user_toDay.php?deleteR=req&jong_id=<?php echo $rowJongQ["id"]; ?>&jong_slip=<?php echo $rowJongQ["time_slot_id"]; ?>&jong_slip=<?php echo $rowJongQ["time_slot_id"]; ?>"
+                                                    <!-- <a href="./jongq_list_user_toDay.php?deleteR=req&jong_id=<?php echo $rowJongQ["id"]; ?>&jong_slip=<?php echo $rowJongQ["time_slot_id"]; ?>&jong_slip=<?php echo $rowJongQ["time_slot_id"]; ?>"
                                                         type="button" class="btn btn-sm btn-danger">
                                                         ลบ
-                                                    </a>
+                                                    </a> -->
                                                     <?php
                                                     }
                                                    elseif($rowJongQ["jong_status"]=="TIME_OUT"){?>
@@ -471,10 +492,10 @@ function updateNum($conn,$jong_date,$jongq_id){
                                                         class="btn btn-sm btn-primary"><strong>ดูข้อมูลการจอง
                                                         </strong>
                                                     </a>
-                                                    <a href="./jongq_list_user_toDay.php?deleteR=req&jong_id=<?php echo $rowJongQ["id"]; ?>&jong_slip=<?php echo $rowJongQ["time_slot_id"]; ?>&jong_slip=<?php echo $rowJongQ["time_slot_id"]; ?>"
+                                                    <!-- <a href="./jongq_list_user_toDay.php?deleteR=req&jong_id=<?php echo $rowJongQ["id"]; ?>&jong_slip=<?php echo $rowJongQ["time_slot_id"]; ?>&jong_slip=<?php echo $rowJongQ["time_slot_id"]; ?>"
                                                         type="button" class="btn btn-sm btn-danger">
                                                         ลบ
-                                                    </a>
+                                                    </a> -->
                                                     <?php
                                                     }   elseif($rowJongQ["jong_status"]=="CANCEL"){?>
                                                     <a type="button" href="#" data-toggle="modal"
@@ -483,10 +504,10 @@ function updateNum($conn,$jong_date,$jongq_id){
                                                         class="btn btn-sm btn-primary"><strong>ดูข้อมูลการจอง
                                                         </strong>
                                                     </a>
-                                                    <a href="./jongq_list_user_toDay.php?deleteR=req&jong_id=<?php echo $rowJongQ["id"]; ?>&jong_slip=<?php echo $rowJongQ["time_slot_id"]; ?>&jong_slip=<?php echo $rowJongQ["time_slot_id"]; ?>"
+                                                    <!-- <a href="./jongq_list_user_toDay.php?deleteR=req&jong_id=<?php echo $rowJongQ["id"]; ?>&jong_slip=<?php echo $rowJongQ["time_slot_id"]; ?>&jong_slip=<?php echo $rowJongQ["time_slot_id"]; ?>"
                                                         type="button" class="btn btn-sm btn-danger">
                                                         ลบ
-                                                    </a>
+                                                    </a> -->
                                                     <?php
                                                     } 
                                                     else{?>
@@ -681,8 +702,8 @@ function findByDate() {
  
         if (isset($_GET["deleteR2"])) { 
             
-            $sql = "DELETE FROM tb_jongs WHERE  jong_status='PENDING' AND id={$_GET["jong_id"]};"; 
-            $sqlCheckStatus = "SELECT jong_status,user_id FROM tb_jongs WHERE jong_status='PENDING' AND user_id='$user_id';"; 
+            $sql = "DELETE FROM tb_jongs WHERE  jong_status='PENDING' OR jong_status='TIME_OUT'  OR  jong_status='SUCCESS' AND id={$_GET["jong_id"]};"; 
+            $sqlCheckStatus = "SELECT jong_status,user_id FROM tb_jongs WHERE jong_status='PENDING' OR jong_status='TIME_OUT'  OR  jong_status='SUCCESS' AND user_id='$user_id';"; 
             $resultCheckStatus  = mysqli_query($conn, $sqlCheckStatus);
 
             if (mysqli_num_rows($resultCheckStatus) == 0) {
@@ -703,6 +724,32 @@ function findByDate() {
                 mysqli_query($conn, $sqlUpdateTimeSlot);
                 $file_slip= "./uploads/{$_GET["jong_slip"]}";
                 $status=unlink($file_slip);    
+
+
+                $url = "http://localhost/line-notification.php";
+ 
+                $data_select_id=$_GET["jong_id"];
+                
+                    
+                    $curl = curl_init();
+
+                    curl_setopt_array($curl, array(
+                    CURLOPT_URL => $url,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_ENCODING => '',
+                    CURLOPT_MAXREDIRS => 10,
+                    CURLOPT_TIMEOUT => 0,
+                    CURLOPT_FOLLOWLOCATION => true,
+                    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+                    CURLOPT_CUSTOMREQUEST => 'POST',
+                    CURLOPT_POSTFIELDS => array('acction' => 'cancel_jongq_acction','jongq_id' => $data_select_id),
+                    ));
+
+                    $response = curl_exec($curl);
+
+                    curl_close($curl);
+
+
                 echo
                     "<script> 
                         Swal.fire(

@@ -99,10 +99,14 @@ $result_num =mysqli_num_rows( $result);
 
 
     function getQ($conn){ 
-        $sql="SELECT * FROM `tb_jongs` WHERE jong_status='CONFIRM' ORDER BY `tb_jongs`.`jong_date_time_confirm` ASC LIMIT 1;";
-        $query=mysqli_query($conn,$sql);  
-        $data_current=mysqli_fetch_assoc($query); 
-        return $data_current["num"];
+        $sql="SELECT * FROM `tb_jongs` WHERE jong_status='CONFIRM' ;";
+        $result=mysqli_query($conn,$sql);  
+        if(mysqli_num_rows($result)>0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
     }
 
    function getQ_SUCCESS($conn){ 
