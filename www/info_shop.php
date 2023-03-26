@@ -21,6 +21,12 @@ $barbershop_information_id=$dataShopInfor["id"];
 
 
 $mountThai = dateMonthThaiFormat(date("M"));
+
+
+$sql_h="SELECT * FROM `tb_hairstyles`";
+$query_h=mysqli_query($conn,$sql_h);
+
+
 ?>
 <!doctype html>
 <html class="no-js" lang="zxx">
@@ -107,6 +113,7 @@ $mountThai = dateMonthThaiFormat(date("M"));
                 </div>
             </div>
         </div>
+
         <?php include_once("./header.php");?>
         <div class="blog-details-area mg-b-15">
             <div class="container-fluid">
@@ -141,6 +148,40 @@ $mountThai = dateMonthThaiFormat(date("M"));
                                     </div>
                                 </div>
                             </div>
+
+
+                            <?php 
+                            if(mysqli_num_rows($query_h) > 0){?>
+
+
+
+                            <div class="row" style="margin-top:1rem;margin-bottom:2rem;">
+
+                                <?php 
+                               while($row_h = mysqli_fetch_assoc($query_h)){
+                                ?>
+                                <div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+                                    <div class="student-inner-std res-mg-b-30">
+                                        <div class="student-img">
+                                            <img src="./img/hairstyles/<?=$row_h["hairstyle_img"]?>" alt="">
+                                        </div>
+                                        <div class="student-dtl">
+                                            <h2><?=$row_h["hairstyle_name"]?></h2>
+                                            <!-- <p class="dp">Computer Science</p>
+                                            <p class="dp-ag"><b>Age:</b> 20 Years</p> -->
+                                        </div>
+                                    </div>
+                                </div>
+                                <?php 
+                               }
+                               ?>
+
+                            </div>
+
+                            <?php 
+                            } 
+                            ?>
+
                             <div class="row">
                                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                     <div class="comment-head">
@@ -148,6 +189,8 @@ $mountThai = dateMonthThaiFormat(date("M"));
                                     </div>
                                 </div>
                             </div>
+
+
                             <div class="row">
 
                                 <?php 
