@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: db
--- Generation Time: Mar 26, 2023 at 08:34 AM
+-- Generation Time: Mar 26, 2023 at 11:35 AM
 -- Server version: 8.0.32
 -- PHP Version: 8.1.15
 
@@ -80,6 +80,28 @@ INSERT INTO `tb_comments` (`id`, `com_date`, `user_id`, `barbershop_information_
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `tb_hairstyles`
+--
+
+CREATE TABLE `tb_hairstyles` (
+  `id` int NOT NULL,
+  `hairstyle_name` varchar(200) NOT NULL,
+  `hairstyle_description` text NOT NULL,
+  `hairstyle_img` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `tb_hairstyles`
+--
+
+INSERT INTO `tb_hairstyles` (`id`, `hairstyle_name`, `hairstyle_description`, `hairstyle_img`) VALUES
+(1, 'ทรงผม1', ' ทรงผมดูดี เซตหน้าม้าปัดข้าง ทรงผมผู้ชายผมยาว ทรงผมชายไทย 2023', 'img1-2020-2.jpg'),
+(2, 'ทรงผม2', 'ปล่อยหน้ามาลง ขยี้เล็กน้อย ทรงผมสั้นผู้ชาย ให้ดูลุคสบาย ๆ ทรงผมผู้ชายผมยาว ทรงผมยาว ผู้ชาย', 'img2-2020-2.jpg'),
+(3, 'ทรงผม 3', 'ทรงผมสั้นผู้ชาย ทรงผมสั้นเท่ๆผู้ชาย ทรงผมดูดี ย้อมผมทำสี แล้วเซ็ตผมแบบปัดด้านบน ทรงผมยาว ผู้ชาย', 'img3-2020-2.jpg');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tb_jongs`
 --
 
@@ -95,14 +117,6 @@ CREATE TABLE `tb_jongs` (
   `jong_date_time_confirm` datetime DEFAULT NULL,
   `num` int NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
---
--- Dumping data for table `tb_jongs`
---
-
-INSERT INTO `tb_jongs` (`id`, `jong_date`, `jong_time`, `jong_status`, `jong_slip`, `time_slot_id`, `user_id`, `jong_date_time`, `jong_date_time_confirm`, `num`) VALUES
-(101, '2023-03-26', '08:00:00', 'SUCCESS', '641ff50e68beed7af4f855a46c46ddbf22509cbe0db66Portfolio.png', 8, 3, '07:32:30', '2023-03-26 07:33:26', 1),
-(104, '2023-03-26', '16:30:00', 'PROCEED', '641ff5a9ce9d475a7626484bb54e4ffd9abfb10e9c040313986095_642650100863662_5843463154184053564_n.jpg', 4, 3, '07:35:05', '2023-03-26 07:40:53', 2);
 
 -- --------------------------------------------------------
 
@@ -146,11 +160,11 @@ CREATE TABLE `tb_time_slots` (
 --
 
 INSERT INTO `tb_time_slots` (`id`, `time_slot_time`, `time_slot_status`, `time_slot_description`) VALUES
-(1, '10:00:00', 0, '10:00-10.50 AM'),
-(2, '11:30:00', 0, '11:30-12.50 AM'),
+(1, '10:00:00', 1, '10:00-10.50 AM'),
+(2, '11:30:00', 1, '11:30-12.50 AM'),
 (3, '14:30:00', 1, '14:30-15.50 AM'),
-(4, '16:30:00', 0, '15:30-16.50 AM'),
-(8, '08:00:00', 0, '08:00-10.00 AM');
+(4, '16:30:00', 1, '15:30-16.50 AM'),
+(8, '08:00:00', 1, '08:00-10.00 AM');
 
 -- --------------------------------------------------------
 
@@ -197,6 +211,12 @@ ALTER TABLE `tb_comments`
   ADD KEY `barbershop_information_id` (`barbershop_information_id`);
 
 --
+-- Indexes for table `tb_hairstyles`
+--
+ALTER TABLE `tb_hairstyles`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `tb_jongs`
 --
 ALTER TABLE `tb_jongs`
@@ -241,6 +261,12 @@ ALTER TABLE `tb_barbershop_informations`
 --
 ALTER TABLE `tb_comments`
   MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `tb_hairstyles`
+--
+ALTER TABLE `tb_hairstyles`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `tb_jongs`
