@@ -461,7 +461,7 @@ $result_num =mysqli_num_rows( $result);
 ?>
 
                                                     <a type="button"
-                                                        href="./jongq_list_admin_toDay.php?cancelR=req&jong_id=<?php echo $rowJongQ["id"]; ?>&time_slot_id=<?php echo $rowJongQ["time_slot_id"]; ?>&jong_slip=<?php echo $rowJongQ["jong_slip"]; ?>"
+                                                        href="./jongq_list_admin_toDay.php?cancelR=req&time_slot_id=<?php echo $rowJongQ["time_slot_id"]; ?>&jong_id=<?php echo $rowJongQ["id"]; ?>&time_slot_id=<?php echo $rowJongQ["time_slot_id"]; ?>&jong_slip=<?php echo $rowJongQ["jong_slip"]; ?>"
                                                         class="btn btn-sm btn-danger text-white">
                                                         ไม่รับ
                                                     </a>
@@ -493,7 +493,7 @@ $result_num =mysqli_num_rows( $result);
                                                         class="btn btn-sm btn-primary"><strong>ดูการจอง </strong>
                                                     </button> -->
                                                     <a type="button" class="btn btn-sm btn-purple"
-                                                        href="./jongq_list_admin_toDay.php?successR=SUCCESS&jong_id=<?php echo $rowJongQ["id"]; ?>"
+                                                        href="./jongq_list_admin_toDay.php?successR=SUCCESS&jong_id=<?php echo $rowJongQ["id"]; ?>&time_slot_id=<?php echo $rowJongQ["time_slot_id"]; ?>"
                                                         style="color:white;background-color: #00e676;">
                                                         ตัดผมเสร็จเรียบร้อย
                                                     </a>
@@ -829,7 +829,7 @@ function findByDate() {
                         })
                         .then((result) => {
                             if (result.isConfirmed) {
-                                location = 'jongq_list_admin_toDay.php?successR2=req&jong_id={$_GET["jong_id"]}'
+                                location = 'jongq_list_admin_toDay.php?successR2=req&jong_id={$_GET["jong_id"]}&time_slot_id={$_GET["time_slot_id"]}'
                             }else{
                                 location = 'jongq_list_admin_toDay.php'
                             }
@@ -838,11 +838,14 @@ function findByDate() {
         }
 
          if (isset($_GET["successR2"])) { 
-            $jong_id=$_GET["jong_id"];
+            $jong_id=$_GET["jong_id"]; 
             $UpdateStatus = "UPDATE `tb_jongs` SET `jong_status` = 'SUCCESS' WHERE `tb_jongs`.`id` = '$jong_id';"; 
  
+            $time_slot_id = $_GET["time_slot_id"];
+            $Update_time_slot = "UPDATE `tb_time_slots` SET `time_slot_status` = '1' WHERE `tb_time_slots`.`id` = '$time_slot_id';"; 
 
-            if (mysqli_query($conn, $UpdateStatus)) {  
+            if (mysqli_query($conn, $UpdateStatus)) { 
+                mysqli_query($conn, $Update_time_slot); 
                 echo
                     "<script> 
                         Swal.fire(
@@ -879,7 +882,7 @@ function findByDate() {
                         })
                         .then((result) => {
                             if (result.isConfirmed) {
-                                location = 'jongq_list_admin_toDay.php?cancelR2=req&jong_id={$_GET["jong_id"]}'
+                                location = 'jongq_list_admin_toDay.php?cancelR2=req&jong_id={$_GET["jong_id"]}&time_slot_id={$_GET["time_slot_id"]}'
                             }else{
                                 location = 'jongq_list_admin_toDay.php'
                             }
@@ -889,10 +892,14 @@ function findByDate() {
 
          if (isset($_GET["cancelR2"])) { 
             $jong_id=$_GET["jong_id"];
-            $UpdateStatus = "UPDATE `tb_jongs` SET `jong_status` = 'CANCEL' WHERE `tb_jongs`.`id` = '$jong_id';"; 
+            $UpdateStatus = "UPDATE `tb_jongs` SET `jong_status` = 'CANCEL' WHERE `tb_jongs`.`id` = '$jong_id';";
+            $time_slot_id = $_GET["time_slot_id"];
+            $Update_time_slot = "UPDATE `tb_time_slots` SET `time_slot_status` = '1' WHERE `tb_time_slots`.`id` = '$time_slot_id';"; 
+            
  
 
             if (mysqli_query($conn, $UpdateStatus)) {  
+                mysqli_query($conn, $Update_time_slot);
                 echo
                     "<script> 
                         Swal.fire(

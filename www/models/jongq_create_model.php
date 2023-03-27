@@ -105,7 +105,7 @@ function createJongQ($conn,$jong_date,$time_slot_id,$user_id,$jong_slip){
                         showConfirmButton: false,
                         timer: 1500
                     })
-                    .then(()=> location = './jongq_list_user.php') 
+                    .then(()=> location = './jongq_list_user_toDay.php') 
               </script>";
         } else {
               echo

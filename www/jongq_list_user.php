@@ -50,11 +50,11 @@ $sqlCount = "SELECT * FROM tb_jongs WHERE jong_date='$dateNoww';";
 $resultJongQLists = mysqli_query($conn, $sqlCount);
 
 $sql="SELECT `id`, `jong_date`, `jong_time`, `jong_status`, `jong_slip`, `time_slot_id`, `user_id`, `jong_date_time`, `jong_date_time_confirm` FROM `tb_jongs` 
-      WHERE jong_status !='CANCEL' AND  jong_status !='TIME_OUT' AND  jong_date='$dateNoww' ;";
+      WHERE jong_status !='CANCEL' AND jong_status !='PENDING' AND jong_status !='TIME_OUT' AND jong_date='$dateNoww' ;";
       
 
 $result =mysqli_query($conn, $sql);
-$result_num =mysqli_num_rows( $result);
+$result_num = mysqli_num_rows($result);
 
 
 
@@ -99,8 +99,22 @@ function updateJongQ($conn,$jong_status,$status,$jongq_id){
         }
     }
 
+    // function getQ($conn){ 
+    //     $sql="SELECT * FROM `tb_jongs` WHERE jong_status='CONFIRM' ORDER BY `tb_jongs`.`jong_date_time_confirm` DESC LIMIT 1;";
+    //     $query=mysqli_query($conn,$sql);  
+    //     $data_current=mysqli_fetch_assoc($query); 
+    //     return $data_current["num"];
+    // }
+
    function getQ_SUCCESS($conn){ 
         $sql="SELECT * FROM `tb_jongs` WHERE jong_status='SUCCESS' ORDER BY `tb_jongs`.`jong_date_time_confirm` DESC LIMIT 1;";
+        $query=mysqli_query($conn,$sql);  
+        $data_current=mysqli_fetch_assoc($query); 
+        return $data_current["num"];
+    }
+
+    function getQ_CONFIRM($conn){ 
+        $sql="SELECT * FROM `tb_jongs` WHERE jong_status='CONFIRM' ORDER BY `tb_jongs`.`jong_date_time_confirm` DESC LIMIT 1;";
         $query=mysqli_query($conn,$sql);  
         $data_current=mysqli_fetch_assoc($query); 
         return $data_current["num"];
@@ -245,7 +259,10 @@ function updateJongQ($conn,$jong_status,$status,$jongq_id){
                                               }else{
                                                 if( getQ_SUCCESS($conn)){ 
                                                      echo   getQ_SUCCESS($conn);
-                                                }else{
+                                                }elseif(getQ_CONFIRM($conn)){
+                                                     echo   getQ_CONFIRM($conn);
+                                                }
+                                                else{
                                                   echo 0;
                                                 }
                                                 

@@ -201,6 +201,12 @@ $queryTimeSlot=   mysqli_query($conn, $sqlTimeSlot);
                                                                 <input required type="file" class="form-control"
                                                                     accept="image/*" name="jong_slip"
                                                                     onchange="loadFile(event)" />
+                                                                <label class="login2 pull-left pull-right-pro "><span
+                                                                        class="text-danger">ราคาการจองคิวตัดผม 50 บาท
+                                                                        ต่อ1
+                                                                        ครั้ง</span></label>
+
+
                                                             </div>
 
                                                         </div>

@@ -53,7 +53,7 @@ $sql="SELECT `id`, `jong_date`, `jong_time`, `jong_status`, `jong_slip`, `time_s
       
 
 $result =mysqli_query($conn, $sql);
-$result_num =mysqli_num_rows( $result);
+$result_num =mysqli_num_rows($result);
 
 
 
