@@ -1,5 +1,5 @@
    <div class="header-advance-area">
-       <div class="header-top-area">
+       <div class="header-top-area" style="background: #000000">
            <div class="container-fluid">
                <div class="row">
                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
