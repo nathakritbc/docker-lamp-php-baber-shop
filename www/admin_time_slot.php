@@ -142,15 +142,18 @@ $dateNow=date("Y-m-d");
                                                                 <?=$rowTimeSlot["time_slot_description"]?>
                                                             </div>
                                                             <div class="col-md-2">
+
+                                                                <?php
+                                                               if($rowTimeSlot["time_slot_status"] == 1){
+                                                                ?>
+
                                                                 <!-- <span class="badge badge-primary badge-pill">1</span> -->
                                                                 <button type="button" class="btn btn-warning" title=""
                                                                     data-original-title="เเก้ไข" data-toggle="modal"
                                                                     data-target="#PrimaryModalftblack<?=$rowTimeSlot["id"]?>">เเก้ไข
                                                                 </button>
 
-                                                                <?php
-                                                               if($rowTimeSlot["time_slot_status"] == 1){
-                                                                ?>
+
                                                                 <a data-toggle="tooltip" title=""
                                                                     href="admin_time_slot.php?deleteR=req&time_lot_id=<?=$rowTimeSlot["id"]?>"
                                                                     type="button" class="btn btn-danger"
