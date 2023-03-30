@@ -148,12 +148,16 @@ $dateNow=date("Y-m-d");
                                                                     data-target="#PrimaryModalftblack<?=$rowTimeSlot["id"]?>">เเก้ไข
                                                                 </button>
 
-
+                                                                <?php
+                                                               if($rowTimeSlot["time_slot_status"] == 1){
+                                                                ?>
                                                                 <a data-toggle="tooltip" title=""
                                                                     href="admin_time_slot.php?deleteR=req&time_lot_id=<?=$rowTimeSlot["id"]?>"
                                                                     type="button" class="btn btn-danger"
                                                                     data-original-title="ลบ">ลบ
                                                                 </a>
+                                                                <?php    } 
+                                                            ?>
 
                                                                 <div id="PrimaryModalftblack<?=$rowTimeSlot["id"]?>"
                                                                     class="
