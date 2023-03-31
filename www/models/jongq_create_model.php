@@ -71,8 +71,8 @@ function createJongQ($conn,$jong_date,$time_slot_id,$user_id,$jong_slip){
         $path = "./uploads/";
         move_uploaded_file($_FILES["jong_slip"]["tmp_name"], "$path/$jong_slip");
 
-       // $url = "http://localhost/line-notification.php";
-        $url = "../line-notification.php";
+       $url =  "http://localhost/line-notification.php";
+       // $url = "../line-notification.php";
 
 
        $sql_select="SELECT * FROM `tb_jongs` ORDER BY id DESC LIMIT 1;";  
