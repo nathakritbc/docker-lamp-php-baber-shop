@@ -73,7 +73,7 @@ $dateNow=date("Y-m-d");
 
                 <div id="PrimaryModalalertaa" class="modal modal-edu-general default-popup-PrimaryModal fade"
                     role="dialog">
-                    <form action="" method="post">
+                    <form action="" method="post" enctype="multipart/form-data">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-close-area modal-close-df">
@@ -91,9 +91,19 @@ $dateNow=date("Y-m-d");
                                     <label for="">เลขที่บัญชี</label>
                                     <input required type="text" name="payment_number" placeholder="xxx-xxx-xxx-xxxx"
                                         class="form-control" required />
+
+                                    <label for="">QR Code ถ้ามี</label>
+                                    <input required type="file" class="form-control" accept="image/*"
+                                        name="payment_image" id="payment_image" onclick="checkFile()" />
+
                                     <input type="hidden" name="add_data" value="add_data">
+                                    <!-- <input required type="file" class="form-control"
+                                                                    accept="image/*" name="jong_slip"
+                                                                    onchange="loadFile(event)" /> -->
                                 </div>
                                 <div class="modal-footer">
+                                    <!-- <button type="button" onclick="checkFile()" class="btn btn-primary">check
+                                        file</button> -->
                                     <button class="btn btn-primary" type="submit">เพิ่มบัญชีธนาคาร</button>
                                     <button class="btn btn-danger" data-dismiss="modal">ยกเลิก</button>
                                 </div>
@@ -141,13 +151,23 @@ $dateNow=date("Y-m-d");
                                                     <li
                                                         class="list-group-item d-flex justify-content-between align-items-center">
                                                         <div class="row justify-content-end">
-                                                            <div class="col-md-10">
-                                                                <h4 class="card-title text-primary">
-                                                                    <?=$rowTimeSlot["payment_bank_name"]?>
-                                                                </h4>
-                                                                <h5 class="card-title"><?=$rowTimeSlot["payment_name"]?>
-                                                                </h5>
-                                                                <p><?=$rowTimeSlot["payment_number"]?></p>
+
+                                                            <div class="col-md-2">
+                                                                <img class="rounded float-left img-thumbnail"
+                                                                    src="./uploads/<?=$rowTimeSlot["payment_image"]?>"
+                                                                    alt="Card image cap">
+                                                            </div>
+
+                                                            <div class="col-md-8">
+                                                                <div style="margin-top:3rem">
+                                                                    <h4 class="card-title text-primary">
+                                                                        <?=$rowTimeSlot["payment_bank_name"]?>
+                                                                    </h4>
+                                                                    <h5 class="card-title">
+                                                                        <?=$rowTimeSlot["payment_name"]?>
+                                                                    </h5>
+                                                                    <p><?=$rowTimeSlot["payment_number"]?></p>
+                                                                </div>
                                                             </div>
                                                             <div class="col-md-2">
                                                                 <!-- <span class="badge badge-primary badge-pill">1</span> -->
@@ -158,7 +178,7 @@ $dateNow=date("Y-m-d");
 
 
                                                                 <a data-toggle="tooltip" title=""
-                                                                    href="admin_bank_account.php?deleteR=req&payment_id=<?=$rowTimeSlot["id"]?>"
+                                                                    href="admin_bank_account.php?deleteR=req&payment_image_qr=<?=$rowTimeSlot["payment_image"]?>&payment_id=<?=$rowTimeSlot["id"]?>"
                                                                     type="button" class="btn btn-danger"
                                                                     data-original-title="ลบ">ลบ
                                                                 </a>
@@ -168,7 +188,8 @@ $dateNow=date("Y-m-d");
                                                                     modal modal-edu-general default-popup-PrimaryModal
                                                                     fade" role="dialog">
                                                                     <div class="modal-dialog">
-                                                                        <form action="" method="post">
+                                                                        <form action="" method="post"
+                                                                            enctype="multipart/form-data">
                                                                             <div class="modal-content">
                                                                                 <div
                                                                                     class="modal-close-area modal-close-df">
@@ -215,6 +236,16 @@ $dateNow=date("Y-m-d");
                                                                                     <input type="hidden"
                                                                                         name="update_data"
                                                                                         value="update_data">
+
+                                                                                    <label for="">QR Code ถ้ามี</label>
+                                                                                    <input type="file" accept="image/*"
+                                                                                        name="payment_image_qr"
+                                                                                        class="form-control" />
+
+                                                                                    <input required type="hidden"
+                                                                                        name="payment_image_qr_old"
+                                                                                        value="<?=$rowTimeSlot["payment_image"]?>"
+                                                                                        class="form-control" />
                                                                                 </div>
                                                                                 <div class="modal-footer">
                                                                                     <button class="btn btn-success"
@@ -237,12 +268,17 @@ $dateNow=date("Y-m-d");
                                                         </div>
 
                                                     </li>
+
+
+
                                                     <?php     }
                                                 }else{
                                                     echo "<h1>ไม่พบข้อมูล</h1>";
                                                 }
                                                 
                                                 ?>
+
+
 
                                                 </ul>
 
@@ -290,12 +326,20 @@ include_once("./configs/connect_db.php");
 
 
 if(isset($_POST["add_data"])){
-    
-
+ 
+          $dt_image1_time = md5(date("Y-m-d h:i:s"));
+          $payment_image = uniqid() . $dt_image1_time . $_FILES["payment_image"]["name"]; 
+ 
+ 
     $sqlUpdate = "INSERT INTO `tb_payments` (`id`, `payment_name`, `payment_number`, `payment_description`, `payment_image`, `barbershop_information_id`, `payment_bank_name`)
-                   VALUES (NULL, '{$_POST["payment_name"]}', '{$_POST["payment_number"]}', '', '', '1', '{$_POST["payment_bank_name"]}');";
+                   VALUES (NULL, '{$_POST["payment_name"]}', '{$_POST["payment_number"]}', '', '{$payment_image}', '1', '{$_POST["payment_bank_name"]}');";
 
     if (mysqli_query($conn, $sqlUpdate)) { 
+
+     
+        $path = "./uploads/";
+        move_uploaded_file($_FILES["payment_image"]["tmp_name"], "$path/$payment_image");
+
                    
                     echo "<script> 
                         Swal.fire({
@@ -328,21 +372,52 @@ if(isset($_POST["add_data"])){
 if(isset($_POST["update_data"])){
     $payment_id=$_POST["payment_id"];
 
+    $payment_image_qr=$_POST["payment_image_qr_old"];
+
+   if (isset($_FILES['payment_image_qr'])) {
+        $file = $_FILES['payment_image_qr'];
+
+        // Check if file is uploaded and not empty
+        if (is_uploaded_file($file['tmp_name']) && !empty($file['name'])) {
+                 $dt_image1_time = md5(date("Y-m-d h:i:s"));
+                 $payment_image_qr = uniqid() . $dt_image1_time . $_FILES["payment_image_qr"]["name"]; 
+        } else { 
+            $payment_image_qr=$_POST["payment_image_qr_old"];
+        }
+    } 
+
+   
+
     $sqlUpdate = "UPDATE `tb_payments` SET `payment_name` = '{$_POST["payment_name"]}', 
                   `payment_number` = '{$_POST["payment_number"]}',
-                  `payment_bank_name` = '{$_POST["payment_bank_name"]}' 
+                  `payment_bank_name` = '{$_POST["payment_bank_name"]}' ,
+                  `payment_image` = '$payment_image_qr'
                   WHERE `tb_payments`.`id` = $payment_id;";
 
-    if (mysqli_query($conn, $sqlUpdate)) { 
+    if (mysqli_query($conn, $sqlUpdate)) {  
+
+                    if(isset($_FILES["payment_image_qr"])){ 
+                        $file = $_FILES['payment_image_qr'];
+                        if (is_uploaded_file($file['tmp_name']) && !empty($file['name'])) {
+                                $path = "./uploads/";
+                                move_uploaded_file($_FILES["payment_image_qr"]["tmp_name"], "$path/$payment_image_qr");
+                                $payment_image_qr_old=$_POST["payment_image_qr_old"];
+                                $status=unlink($payment_image_qr_old); 
+                        }
+
+
+                    }
+
                    
                     echo "<script> 
                         Swal.fire({
                                 position: 'center',
                                 icon: 'success',
-                                title: 'เเก้ไขข้อมูล',
+                                title: 'เเก้ไขข้อมูลสำเร็จ',
                                 showConfirmButton: false,
                                 timer: 1500
-                            }).then(()=> location = './admin_bank_account.php')
+                            })
+                            .then(()=> location = './admin_bank_account.php')
 
                     </script>";
                 
@@ -377,7 +452,7 @@ if(isset($_POST["update_data"])){
                             cancelButtonText: 'ไม่!'
                         }).then((result) => {
                             if (result.isConfirmed) {
-                                location = 'admin_bank_account.php?deleteR2=req&payment_id={$_GET["payment_id"]}'
+                                location = 'admin_bank_account.php?deleteR2=req&payment_image_qr={$_GET["payment_image_qr"]}&payment_id={$_GET["payment_id"]}'
                             }else{
                                 location = 'admin_bank_account.php'
                             }
@@ -390,8 +465,13 @@ if(isset($_POST["update_data"])){
 
             // คำสั่ง sql ในการลบข้อมูล ตาราง tbl_products โดยจะลบข้อมูลสินค้า p_id ที่ส่งมา
             $sql = "DELETE FROM tb_payments WHERE id={$_GET["payment_id"]}";
-
+ 
+ 
             if (mysqli_query($conn, $sql)) {
+
+                        $file_slip= "./uploads/{$_GET["payment_image_qr"]}";
+                        $status=unlink($file_slip); 
+
                 echo
                     "<script> 
                         Swal.fire(
@@ -414,6 +494,15 @@ if(isset($_POST["update_data"])){
         }
 
 ?>
+
+
+
+<script>
+function checkFile() {
+    let fileImg = document.getElementById("payment_image").value
+    console.log('payment_image', fileImg);
+}
+</script>
 
 
 </html>

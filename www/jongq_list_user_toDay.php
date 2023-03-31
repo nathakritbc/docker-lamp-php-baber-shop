@@ -772,6 +772,7 @@ function findByDate() {
  
 
             mysqli_close($conn);
+            
         }
         ?>
 

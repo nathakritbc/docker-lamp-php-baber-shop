@@ -116,15 +116,23 @@ $queryTimeSlot=   mysqli_query($conn, $sqlTimeSlot);
                                                                     <li
                                                                         class="list-group-item d-flex justify-content-between align-items-center">
                                                                         <div class="row justify-content-end">
+                                                                            <div class="col-md-2">
+                                                                                <img class="rounded float-left img-thumbnail "
+                                                                                    src="./uploads/<?=$rowTimeSlot["payment_image"]?>"
+                                                                                    alt="Card image cap">
+                                                                            </div>
+
                                                                             <div class="col-md-10">
-                                                                                <h4 class="card-title text-primary">
-                                                                                    <?=$rowTimeSlot["payment_bank_name"]?>
-                                                                                </h4>
-                                                                                <h5 class="card-title">
-                                                                                    <?=$rowTimeSlot["payment_name"]?>
-                                                                                </h5>
-                                                                                <p><?=$rowTimeSlot["payment_number"]?>
-                                                                                </p>
+                                                                                <div style="margin-top:3rem">
+                                                                                    <h4 class="card-title text-primary">
+                                                                                        <?=$rowTimeSlot["payment_bank_name"]?>
+                                                                                    </h4>
+                                                                                    <h5 class="card-title">
+                                                                                        <?=$rowTimeSlot["payment_name"]?>
+                                                                                    </h5>
+                                                                                    <p><?=$rowTimeSlot["payment_number"]?>
+                                                                                    </p>
+                                                                                </div>
                                                                             </div>
                                                                         </div>
                                                                     </li>
