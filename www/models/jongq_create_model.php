@@ -44,6 +44,18 @@ function createJongQ($conn,$jong_date,$time_slot_id,$user_id,$jong_slip){
         $resultTimeSlot = mysqli_query($conn, $sqlTimeSlot);
         $dataTimeSlot=  mysqli_fetch_assoc($resultTimeSlot);  
         $jong_time= $dataTimeSlot["time_slot_time"]; 
+
+        $sqlUser ="SELECT * FROM tb_users WHERE id='$user_id';";
+        $queryUser = mysqli_query($conn,$sqlUser);
+        $resUser = mysqli_fetch_assoc($queryUser);
+        $userId  = $resUser["line_user_id"];
+
+        
+        $sqlShop ="SELECT * FROM tb_barbershop_informations  WHERE id='1';";
+        $queryShop = mysqli_query($conn,$sqlShop);
+        $resShop = mysqli_fetch_assoc($queryShop);
+        $access_token = $resShop["bi_channel_access_token_line"];
+        $urlHttps = $resShop["ip_address"];
         
 
         // $jong_slip=mysqli_real_escape_string($conn,$_POST["jong_slip"]);
@@ -98,6 +110,45 @@ function createJongQ($conn,$jong_date,$time_slot_id,$user_id,$jong_slip){
         $response = curl_exec($curl);
 
         curl_close($curl);
+
+
+        
+
+        $url = 'https://api.line.me/v2/bot/message/push';
+
+        $headers = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer ' . $access_token
+        );
+
+        $data = array(
+            'to' => $userId,
+            'messages' => array(
+                array(
+                    'type' => 'text',
+                    'text' => 'ตรวจสอบการจองคิวตัดผม',
+                ),
+                array(
+                    'type' => 'text',
+                    'text' =>  $urlHttps."/jongq_list_user_toDay.php", 
+                ),
+            ),
+        );
+
+        $options = array(
+            'http' => array(
+                'method' => 'POST',
+                'header' => implode("\r\n", $headers),
+                'content' => json_encode($data),
+            ),
+        );
+
+        $context = stream_context_create($options);
+        $result = file_get_contents($url, false, $context);
+
+        echo $result;
+
+
 
         echo "<script> 
                 Swal.fire({

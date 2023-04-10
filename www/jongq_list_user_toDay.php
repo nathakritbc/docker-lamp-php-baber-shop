@@ -25,6 +25,21 @@ $sqlJongQLists = "SELECT ts.time_slot_description,jn.id,jn.jong_date,jn.jong_tim
                  WHERE jn.jong_date='$dateNoww' AND jn.user_id='$user_id'
                   ORDER BY jn.jong_date_time DESC;";
 
+
+        $sqlUser ="SELECT * FROM tb_users WHERE id='$user_id';";
+        $queryUser = mysqli_query($conn,$sqlUser);
+        $resUser = mysqli_fetch_assoc($queryUser);
+        $userId  = $resUser["line_user_id"];
+
+        
+        $sqlShop ="SELECT * FROM tb_barbershop_informations  WHERE id='1';";
+        $queryShop = mysqli_query($conn,$sqlShop);
+        $resShop = mysqli_fetch_assoc($queryShop);
+        $access_token = $resShop["bi_channel_access_token_line"];
+        $urlHttps = $resShop["ip_address"];
+
+
+
 if(isset($_GET["findDate"])){
 $dd=$_GET["findDate"];
 $isDateNow=false;
@@ -748,6 +763,43 @@ function findByDate() {
                     $response = curl_exec($curl);
 
                     curl_close($curl);
+
+                    
+
+                    $url = 'https://api.line.me/v2/bot/message/push';
+
+                    $headers = array(
+                        'Content-Type: application/json',
+                        'Authorization: Bearer ' . $access_token
+                    );
+
+                    $data = array(
+                        'to' => $userId,
+                        'messages' => array(
+                            array(
+                                'type' => 'text',
+                                'text' => 'มีการยกเลิกรายการจองคิวตัดผม ไอดีที่ '.$data_select_id. ' ตรวจสอบการจองคิวตัดผม',
+                            ),
+                            array(
+                                'type' => 'text',
+                                'text' =>  $urlHttps."/jongq_list_user_toDay.php", 
+                            ),
+                        ),
+                    );
+
+                    $options = array(
+                        'http' => array(
+                            'method' => 'POST',
+                            'header' => implode("\r\n", $headers),
+                            'content' => json_encode($data),
+                        ),
+                    );
+
+                    $context = stream_context_create($options);
+                    $result = file_get_contents($url, false, $context);
+
+                    echo $result;
+
 
 
                 echo

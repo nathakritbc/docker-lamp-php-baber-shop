@@ -186,7 +186,91 @@ include_once("./configs/connect_db.php");
                                                             <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
                                                                 <input required type="text" name="ip_address"
                                                                     value="<?=$userResult['ip_address']?>"
-                                                                    class="form-control" required />
+                                                                    class="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group-inner">
+                                                        <div class="row">
+                                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                                                <label class="login2 pull-right pull-right-pro">รหัสเเอด
+                                                                    ไลน์ oa</label>
+                                                            </div>
+                                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                                                <input type="text" name="bi_line_oa"
+                                                                    value="<?=$userResult['bi_line_oa']?>"
+                                                                    class="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group-inner">
+                                                        <div class="row">
+                                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                                                <label class="login2 pull-right pull-right-pro">channel
+                                                                    token line oa</label>
+                                                            </div>
+                                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                                                <input type="text" name="bi_channel_access_token_line"
+                                                                    value="<?=$userResult['bi_channel_access_token_line']?>"
+                                                                    class="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group-inner">
+                                                        <div class="row">
+                                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                                                <label class="login2 pull-right pull-right-pro">ลิ้งค์
+                                                                    QR code เเอดไลน์ oa</label>
+                                                            </div>
+                                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                                                <input type="text" name="bi_line_oa_qr"
+                                                                    value="<?=$userResult['bi_line_oa_qr']?>"
+                                                                    class="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group-inner">
+                                                        <div class="row">
+                                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                                                <label class="login2 pull-right pull-right-pro"> line
+                                                                    channel secret</label>
+                                                            </div>
+                                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                                                <input type="text" name="bi_line_channel_secret"
+                                                                    value="<?=$userResult['bi_line_channel_secret']?>"
+                                                                    class="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group-inner">
+                                                        <div class="row">
+                                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                                                <label class="login2 pull-right pull-right-pro">channel
+                                                                    id</label>
+                                                            </div>
+                                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                                                <input type="text" name="bi_channel_id"
+                                                                    value="<?=$userResult['bi_channel_id']?>"
+                                                                    class="form-control" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="form-group-inner">
+                                                        <div class="row">
+                                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                                                <label class="login2 pull-right pull-right-pro">link add
+                                                                    friend line oa</label>
+                                                            </div>
+                                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                                                <input type="text" name="bi_link_oa_add_friend"
+                                                                    value="<?=$userResult['bi_link_oa_add_friend']?>"
+                                                                    class="form-control" />
                                                             </div>
                                                         </div>
                                                     </div>
@@ -374,7 +458,12 @@ if(isset($_POST["update_shop_information"])){
                   SET  `bi_name`='{$_POST["bi_name"]}',`bi_tel`='{$_POST["bi_tel"]}',`bi_profile`='{$bi_profile}',
                        `bi_email`='{$_POST["bi_email"]}',`bi_line`='{$_POST["bi_line"]}',`bi_descriptions`='{$_POST["bi_descriptions"]}',
                        `bi_shop_owner`='{$_POST["bi_shop_owner"]}',`bi_line_token`='{$_POST["bi_line_token"]}',
-                       `ip_address`='{$_POST["ip_address"]}' WHERE id='1';";
+                       `ip_address`='{$_POST["ip_address"]}' , 
+
+                        `bi_channel_access_token_line`='{$_POST["bi_channel_access_token_line"]}',`bi_line_oa`='{$_POST["bi_line_oa"]}',
+                        `bi_line_oa_qr`='{$_POST["bi_line_oa_qr"]}',`bi_line_channel_secret`='{$_POST["bi_line_channel_secret"]}',
+                        `bi_link_oa_add_friend`='{$_POST["bi_link_oa_add_friend"]}',`bi_channel_id`='{$_POST["bi_channel_id"]}' 
+                        WHERE id='1';";
 
     if (mysqli_query($conn, $sqlUpdate)) {
 
@@ -388,9 +477,9 @@ if(isset($_POST["update_shop_information"])){
                          @session_start(); 
                           $_SESSION['username'] = $_POST["username"];  
                           $_SESSION['full_name'] = $_POST["full_name"]    ;
-                        $_SESSION['email'] = $_POST["email"];  
-                        $_SESSION['bi_profile'] =$bi_profile;  
-                        $_SESSION['tel'] =  $_POST["tel"];  
+                          $_SESSION['email'] = $_POST["email"];  
+                          $_SESSION['bi_profile'] =$bi_profile;  
+                          $_SESSION['tel'] =  $_POST["tel"];  
 
                     }
 

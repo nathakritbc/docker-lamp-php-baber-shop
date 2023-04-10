@@ -1,6 +1,7 @@
 <?php 
 @session_start();
 //  @session_destroy();
+
 ?>
 <!doctype html>
 <html class="no-js" lang="en">
@@ -101,6 +102,8 @@
                                 <p class="help-block small">(if this is a private computer)</p>
                             </div> -->
                             <input type="hidden" name="acction" value="login">
+
+
                             <button type="submit" class="btn btn-success btn-block loginbtn">เข้าสู่ระบบ</button>
                             <!-- <a class="btn btn-default btn-block" href="#">Register</a> -->
                         </form>

@@ -81,12 +81,23 @@ function login($conn,$username,$password){
            $username = mysqli_real_escape_string($conn, $_POST["username"]);  
            $password = mysqli_real_escape_string($conn, $_POST["password"]);  
            $password = md5($password);  
+
+           
            $sql = "SELECT * FROM tb_users WHERE username = '$username' AND password = '$password'";  
            $result = mysqli_query($conn, $sql);  
            if(mysqli_num_rows($result) > 0)  
            {  
+             $rowUser =  mysqli_fetch_assoc($result);
+
+              if(isset($_GET["userId"])){
+                $userId = $_GET["userId"];
+                $id=$rowUser["id"];
+                $sqlUpdate="UPDATE `tb_users` SET `line_user_id` = '$userId' WHERE `tb_users`.`id` = $id;";
+                mysqli_query($conn, $sqlUpdate);
+            }
+
                 @session_start();
-                $rowUser =  mysqli_fetch_assoc($result);
+               
                 $_SESSION['username'] = $username;  
                 $_SESSION['is_login'] = true; 
                 $_SESSION['user_id'] = $rowUser["id"];

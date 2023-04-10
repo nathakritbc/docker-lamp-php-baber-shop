@@ -11,6 +11,21 @@ if( $_SESSION["user_role"] !=="USER"){
 $dateNow=date("Y-m-d");
 include_once("./configs/connect_db.php");
 
+
+$sqlUser ="SELECT * FROM `tb_users` WHERE id='{$_SESSION['user_id']}';";
+$resultUser = mysqli_query($conn, $sqlUser);
+$resUser =   mysqli_fetch_assoc($resultUser);
+
+$isUserId=false;
+
+if($resUser["line_user_id"] == "" || $resUser["line_user_id"] == NULL  ){
+    $isUserId=false;
+}else{
+    $isUserId=true;
+}
+
+
+
 $sqlTimeSlot = "SELECT * FROM tb_time_slots WHERE time_slot_status='1' ORDER BY `tb_time_slots`.`time_slot_description` ASC;";
 $resultTimeSlot = mysqli_query($conn, $sqlTimeSlot);
 
@@ -214,22 +229,40 @@ $queryTimeSlot=   mysqli_query($conn, $sqlTimeSlot);
                                                                 <label class="login2 pull-left pull-right-pro "><span
                                                                         class="text-danger">ราคาการจองคิวตัดผม 50 บาท
                                                                         ต่อ1
-                                                                        ครั้ง</span></label>
-
+                                                                        ครั้ง</span>
+                                                                </label>
 
                                                             </div>
 
                                                         </div>
                                                     </div>
 
-                                                    <!-- <div class="form-group-inner">
+                                                    <?php 
+                                               if(!$isUserId){?>
+                                                    <div class="form-group-inner">
                                                         <div class="row">
-                                                            <div class="col-12">
-                                                                <img class="rounded mx-auto d-block" id="output" />
+                                                            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+
+                                                            </div>
+                                                            <div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+                                                                <h4>เเอดไลน์เเละยืนยันตัวตนผ่าน ไลน์บอท
+                                                                    เพื่อติดตามเเจ้งเตือนสถานะการจองคิวตัดผม</h4>
+                                                                <img src="https://qr-official.line.me/gs/M_127aipgw_GW.png"
+                                                                    class="img-thumbnail">
+
                                                             </div>
 
                                                         </div>
-                                                    </div> -->
+                                                    </div>
+                                                    <?php 
+                                                                        }
+                                                                        ?>
+
+
+
+
+
+
 
                                                     <?php  if(mysqli_num_rows($resultTimeSlot)>0){?>
                                                     <div class="form-group-inner">
@@ -242,10 +275,18 @@ $queryTimeSlot=   mysqli_query($conn, $sqlTimeSlot);
                                                                         <!-- <button class="btn btn-white"
                                                                             type="submit">Cancel
                                                                         </button> -->
+
+                                                                        <?php 
+                                                                        if($isUserId){?>
                                                                         <button id="btnSubmit"
                                                                             class="btn btn-sm btn-primary login-submit-cs"
                                                                             type="submit">บันทึกการจองคิวตัดผม
                                                                         </button>
+                                                                        <?php 
+                                                                        }
+                                                                        ?>
+
+
                                                                     </div>
                                                                 </div>
                                                             </div>

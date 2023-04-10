@@ -20,6 +20,16 @@ include_once("./configs/connect_db.php");
 $sqlJongQLists = "SELECT ts.time_slot_description,jn.time_slot_id, jn.id,jn.jong_date,jn.jong_time,jn.jong_status,jn.jong_slip,jn.user_id,u.full_name,u.username 
                   FROM tb_jongs jn INNER JOIN tb_users u ON jn.user_id = u.id  INNER JOIN tb_time_slots ts ON jn.time_slot_id = ts.id
                    WHERE jn.jong_date='$ddNow' ORDER BY jn.jong_date_time  ASC;";
+                   
+
+ 
+        
+        $sqlShop ="SELECT * FROM tb_barbershop_informations  WHERE id='1';";
+        $queryShop = mysqli_query($conn,$sqlShop);
+        $resShop = mysqli_fetch_assoc($queryShop);
+        $access_token = $resShop["bi_channel_access_token_line"];
+        $urlHttps = $resShop["ip_address"];
+
 
 if(isset($_GET["findDate"])){
 $dd=$_GET["findDate"];
@@ -450,7 +460,7 @@ $result_num =mysqli_num_rows( $result);
                                                     ?>
 
                                                     <a type="button"
-                                                        href="./jongq_list_admin_toDay.php?confirmR=req&jong_id=<?php echo $rowJongQ["id"]; ?>"
+                                                        href="./jongq_list_admin_toDay.php?confirmR=req&jong_id=<?php echo $rowJongQ["id"]; ?>&user_id=<?php echo $rowJongQ["user_id"]; ?>"
                                                         type="button"
                                                         class="btn btn-sm btn-success"><strong>ยืนยันการจอง
                                                         </strong>
@@ -461,7 +471,7 @@ $result_num =mysqli_num_rows( $result);
 ?>
 
                                                     <a type="button"
-                                                        href="./jongq_list_admin_toDay.php?cancelR=req&time_slot_id=<?php echo $rowJongQ["time_slot_id"]; ?>&jong_id=<?php echo $rowJongQ["id"]; ?>&time_slot_id=<?php echo $rowJongQ["time_slot_id"]; ?>&jong_slip=<?php echo $rowJongQ["jong_slip"]; ?>"
+                                                        href="./jongq_list_admin_toDay.php?cancelR=req&time_slot_id=<?php echo $rowJongQ["time_slot_id"]; ?>&jong_id=<?php echo $rowJongQ["id"]; ?>&time_slot_id=<?php echo $rowJongQ["time_slot_id"]; ?>&jong_slip=<?php echo $rowJongQ["jong_slip"]; ?>&user_id=<?php echo $rowJongQ["user_id"]; ?>"
                                                         class="btn btn-sm btn-danger text-white">
                                                         ไม่รับ
                                                     </a>
@@ -699,7 +709,7 @@ function findByDate() {
                         })
                         .then((result) => {
                             if (result.isConfirmed) {
-                                location = 'jongq_list_admin_toDay.php?confirmR2=req&jong_id={$_GET["jong_id"]}'
+                                location = 'jongq_list_admin_toDay.php?confirmR2=req&jong_id={$_GET["jong_id"]}&user_id={$_GET["user_id"]}'
                             }else{
                                 location = 'jongq_list_admin_toDay.php'
                             }
@@ -709,6 +719,7 @@ function findByDate() {
 
          if (isset($_GET["confirmR2"])) { 
             $jong_id=$_GET["jong_id"];
+            $user_id = $_GET["user_id"];
             $dddNow=date('Y-m-d');
 
            $SQL_CONFIRM="SELECT id,jong_date_time_confirm ,num,jong_date,jong_date_time FROM `tb_jongs` WHERE jong_date_time_confirm IS NOT NULL AND jong_date='$dddNow' 
@@ -740,6 +751,49 @@ function findByDate() {
  
 
             if (mysqli_query($conn, $UpdateStatus)) {  
+
+
+                    $sqlUser ="SELECT * FROM tb_users WHERE id='$user_id';";
+                    $queryUser = mysqli_query($conn,$sqlUser);
+                    $resUser = mysqli_fetch_assoc($queryUser);
+                    $userId  = $resUser["line_user_id"];
+
+                
+                    $url = 'https://api.line.me/v2/bot/message/push';
+
+                    $headers = array(
+                        'Content-Type: application/json',
+                        'Authorization: Bearer ' . $access_token
+                    );
+
+                    $data = array(
+                        'to' => $userId,
+                        'messages' => array(
+                            array(
+                                'type' => 'text',
+                                'text' => 'ร้านตัดผมรับออร์เดอร์การจองคิวตัดผม ไอดีที่ '.$jong_id. ' ตรวจสอบการจองคิวตัดผม',
+                            ),
+                            array(
+                                'type' => 'text',
+                                'text' =>  $urlHttps."/jongq_list_user_toDay.php", 
+                            ),
+                        ),
+                    );
+
+                    $options = array(
+                        'http' => array(
+                            'method' => 'POST',
+                            'header' => implode("\r\n", $headers),
+                            'content' => json_encode($data),
+                        ),
+                    );
+
+                    $context = stream_context_create($options);
+                    $result = file_get_contents($url, false, $context);
+
+                    echo $result;
+
+
                 echo
                     "<script> 
                         Swal.fire(
@@ -882,7 +936,7 @@ function findByDate() {
                         })
                         .then((result) => {
                             if (result.isConfirmed) {
-                                location = 'jongq_list_admin_toDay.php?cancelR2=req&jong_id={$_GET["jong_id"]}&time_slot_id={$_GET["time_slot_id"]}'
+                                location = 'jongq_list_admin_toDay.php?cancelR2=req&jong_id={$_GET["jong_id"]}&time_slot_id={$_GET["time_slot_id"]}&user_id={$_GET["user_id"]}'
                             }else{
                                 location = 'jongq_list_admin_toDay.php'
                             }
@@ -892,6 +946,8 @@ function findByDate() {
 
          if (isset($_GET["cancelR2"])) { 
             $jong_id=$_GET["jong_id"];
+            $user_id=$_GET["user_id"];
+
             $UpdateStatus = "UPDATE `tb_jongs` SET `jong_status` = 'CANCEL' WHERE `tb_jongs`.`id` = '$jong_id';";
             $time_slot_id = $_GET["time_slot_id"];
             $Update_time_slot = "UPDATE `tb_time_slots` SET `time_slot_status` = '1' WHERE `tb_time_slots`.`id` = '$time_slot_id';"; 
@@ -900,6 +956,51 @@ function findByDate() {
 
             if (mysqli_query($conn, $UpdateStatus)) {  
                 mysqli_query($conn, $Update_time_slot);
+
+                
+
+                    $sqlUser ="SELECT * FROM tb_users WHERE id='$user_id';";
+                    $queryUser = mysqli_query($conn,$sqlUser);
+                    $resUser = mysqli_fetch_assoc($queryUser);
+                    $userId  = $resUser["line_user_id"];
+
+                
+                    $url = 'https://api.line.me/v2/bot/message/push';
+
+                    $headers = array(
+                        'Content-Type: application/json',
+                        'Authorization: Bearer ' . $access_token
+                    );
+
+                    $data = array(
+                        'to' => $userId,
+                        'messages' => array(
+                            array(
+                                'type' => 'text',
+                                'text' => 'ร้านตัดผมยกเลิกออร์เดอร์การจองคิวตัดผม ไอดีที่ '.$jong_id. ' ตรวจสอบการจองคิวตัดผม',
+                            ),
+                            array(
+                                'type' => 'text',
+                                'text' =>  $urlHttps."/jongq_list_user_toDay.php", 
+                            ),
+                        ),
+                    );
+
+                    $options = array(
+                        'http' => array(
+                            'method' => 'POST',
+                            'header' => implode("\r\n", $headers),
+                            'content' => json_encode($data),
+                        ),
+                    );
+
+                    $context = stream_context_create($options);
+                    $result = file_get_contents($url, false, $context);
+
+                    echo $result;
+
+
+
                 echo
                     "<script> 
                         Swal.fire(
