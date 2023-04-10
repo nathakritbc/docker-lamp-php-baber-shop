@@ -43,7 +43,7 @@ $data = array(
         ),
         array(
             'type' => 'text',
-            'text' => $urlHttps."?userId=".$userId,
+            'text' => $urlHttps."/login.php?userId=".$userId,
             
         ),
     ),
